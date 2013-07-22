@@ -9,21 +9,48 @@ package LudoApplication;
  * @author Jason
  */
 public class Field {
+    private int id;
     private Field next;
-    private int index;
     
-    public Field(int index)
+    private Pawn occupant;    
+    
+    public Field(int id)
     {
-        this.index = index;
+        this.id = id;
     }
     
-    public void SetNext(Field next)
+    public int GetId()
     {
-        this.next = next;
+        return id;
+    }
+    
+    public void SetNext(Field value)
+    {
+        next = value;
     }
     
     public Field GetNext()
     {
-        return this.next;
+        return next;
+    }
+   
+    public void SetOccupant(Pawn value)
+    {
+        if (occupant == value)
+            return;
+        
+        Pawn old = occupant;
+        occupant = value;
+        
+        if (old != null && old.GetSquare() == this)
+            old.ReturnHome();
+        
+        if (occupant != null)
+            occupant.SetSquare(this);
+    }
+    
+    public Pawn GetOccupant()
+    {
+        return occupant;
     }
 }

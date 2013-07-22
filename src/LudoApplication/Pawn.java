@@ -9,40 +9,64 @@ package LudoApplication;
  * @author Jason
  */
 public class Pawn {
+    private int pawnId = -1;
     private Player owner = null;
+    private Home home = null;
     private Field isOn = null;
     
     private boolean reachedGoal = false;
     
-    public Pawn(Player owner)
+    public Pawn(int pawnId, Player owner, Home home)
     {
+        this.pawnId = pawnId;
         this.owner = owner;
-        this.isOn = null;
+        this.home = home;
+        this.isOn = home;
     }
     
     public void Advance()
     {
-        Field next = null;
-        
         if (isOn == null)
-            ;// next = owner.GetEntrySquare();
-        else if(isOn instanceof Goal && ((Goal)isOn).GetOwner() == owner)
-            next = ((Goal)isOn).GetNextGoal();
+            return;
+        
+        if(isOn instanceof Goal && ((Goal)isOn).GetOwner() == owner)
+            SetSquare(((Goal)isOn).GetNextGoal());
         else
-            next = isOn.GetNext();
-        
-        
-        
-        SetSquare(isOn.GetNext());
+            SetSquare(isOn.GetNext());
     }
     
-    public void SetSquare(Field square)
+    public int GetPawnId()
     {
-        this.isOn = square;
+        return pawnId;
+    }
+    
+    public int GetPlayerId()
+    {
+        return owner.GetPlayerId();
+    }
+    
+    public void SetSquare(Field value)
+    {
+        if (isOn == value)
+            return;
+        
+        Field old = isOn;
+        isOn = value;
+        
+        if (old != null && old.GetOccupant() == this)
+            old.SetOccupant(null);
+        
+        if (isOn != null)
+            isOn.SetOccupant(this);
+    }
+    
+    public void ReturnHome()
+    {
+        SetSquare(home);
     }
     
     public Field GetSquare()
     {
-        return this.isOn;
+        return isOn;
     }
 }

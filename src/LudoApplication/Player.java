@@ -9,13 +9,20 @@ package LudoApplication;
  * @author Jason
  */
 public class Player {
+    private int id = -1;
     private String name = null;
     
     private Strategy strategy = null;
     
-    public Player(String name)
+    public Player(int id, String name)
     {
+        this.id = id;
         this.name = name;
+    }
+    
+    public int GetPlayerId()
+    {
+        return this.id;
     }
     
     public void SetName(String name)

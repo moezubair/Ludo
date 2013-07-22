@@ -22,6 +22,7 @@ public class Board {
     
     private Field[] exteriorSquares;
     private Field[][] goalSquares;
+    private Home[][] homeSquares;
     
     private Die die = null;
     
@@ -31,8 +32,8 @@ public class Board {
     
     private PHASE playerPhase = PHASE.NONE;
     private boolean phaseEnded = false;
-    
-    private int movesTaken = 0;
+
+    private int movesRemaining = 0;
    
     
     private Player actingPlayer = null;
@@ -55,6 +56,10 @@ public class Board {
     public final int PLAYERDISTANCE = 10;
     public final int INTERIORSQUARES = 4;
     
+    private final String PAWN_AT_HOME = "A pawn may only be moved into play if a six is rolled.";
+    private final String PAWN_NOT_OWNED = "Only pawns owned by the acting player may be moved.";
+    private final String PAWN_BLOCKED = "Pawns cannot be moved if they are blocked by pawns of the same player.";
+    
     public Board() throws Exception
     {
         initiate();
@@ -69,7 +74,7 @@ public class Board {
         // we create all 4 players regardless of the actual number of players.
         players = new Player[MAXPLAYERS];
         for (int i = 0; i < players.length; i++)
-            players[i] = new Player("Player " + String.valueOf(i + 1));
+            players[i] = new Player(i, "Player " + String.valueOf(i + 1));
         
         // Initialize board squares.
         // Board squares are given a unique index to allow them to be
@@ -81,7 +86,7 @@ public class Board {
         {
             if (i % PLAYERDISTANCE == 0)
                 exteriorSquares[i] = new Goal(i, players[i / PLAYERDISTANCE]);
-            else if ((i - 1) % PLAYERDISTANCE == 0)
+            else if (i % PLAYERDISTANCE == 1)
                 exteriorSquares[i] = new Entry(i, players[i / PLAYERDISTANCE]);
             else
                 exteriorSquares[i] = new Field(i);
@@ -102,13 +107,39 @@ public class Board {
             goalSquares[i] = new Field[INTERIORSQUARES];
             for (int j = 0; j < goalSquares[i].length; j++)
             {
-                int index = EXTERIORSQUARES + (i * INTERIORSQUARES) + j;
+                int id = EXTERIORSQUARES + (i * INTERIORSQUARES) + j;
                 
-                goalSquares[i][j] = new Field(index);
+                goalSquares[i][j] = new Field(id);
+                
+                if (j == 0)
+                {
+                    Goal goal = (Goal)exteriorSquares[i * PLAYERDISTANCE];
+                    goal.SetNextGoal(goalSquares[i][j]);
+                }
                 
                 if (j > 0)
                     goalSquares[i][j - 1].SetNext(goalSquares[i][j]);
             }
+        }
+        
+        // Create the home squares. These are placeholder squares that each
+        // pawn rests on before being brought into play. This is to reduce
+        // the amount of testing for null squares required.
+        homeSquares = new Home[MAXPLAYERS][];
+        for (int i = 0; i < homeSquares.length; i++)
+        {
+            homeSquares[i] = new Home[PLAYERPAWNS];
+            for (int j = 0; j < homeSquares[i].length; j++)
+            {
+                int id = 0;
+                id += EXTERIORSQUARES;
+                id += MAXPLAYERS * INTERIORSQUARES;
+                id += (i * PLAYERPAWNS) + j;
+                
+                homeSquares[i][j] = new Home(id);
+                homeSquares[i][j].SetNext(exteriorSquares[i * PLAYERDISTANCE + 1]);
+            }
+        
         }
         
         // Create each player's pawns.
@@ -117,12 +148,13 @@ public class Board {
         {
             pawns[i] = new Pawn[PLAYERPAWNS];
             for (int j = 0; j < pawns[i].length; j++)
-                pawns[i][j] = new Pawn(players[i]);
+                pawns[i][j] = new Pawn(j, players[i], homeSquares[i][j]);
         }
         
         // Create a new 6 sided die.
-        die = new Die(6);
+        die = new Die(100);
         
+        // Setup the game update loop.
         gameUpdateInterval = 100;
         gameTask = new TimerTask() { public void run() { AdvanceGame(); } };
         gameTimer = new Timer();
@@ -136,12 +168,21 @@ public class Board {
         if (paused || pausedForInput)
             return;
         
-        if (turnEnded)
-            AdvanceTurn();
-        else if (phaseEnded)
-            AdvancePhase();
-        else
-            DoPhase();
+        try
+        {
+            if (turnEnded)
+                AdvanceTurn();
+            else if (phaseEnded)
+                AdvancePhase();
+            else
+                DoPhase();
+        }
+        catch (GameException e)
+        {
+            System.out.println("GameException thrown in DoPhase function... This should never happen.");
+            System.out.println(String.valueOf(e.getType()));
+            System.out.println(e.getMessage());
+        }
     }
     
     // Game Operations
@@ -195,7 +236,7 @@ public class Board {
         OnPhaseEnd();
     }
     
-    public void DoPhase()
+    public void DoPhase() throws GameException
     {
         switch(playerPhase)
         {
@@ -206,12 +247,13 @@ public class Board {
         }
     }
     
-    public void DoStartTurnPhase()
+    public void DoStartTurnPhase() throws GameException
     {
         if (playerPhase != PHASE.STARTTURN)
         {
-            // Log error.
-            return;
+            String msg = "Invalid phase: " + String.valueOf(playerPhase);
+            
+            throw new GameException(GameException.TYPE.PHASE, msg);
         }
         
         // Non-action phase.
@@ -219,47 +261,84 @@ public class Board {
         EndPhase();
     }
     
-    public void DoRollDicePhase()
+    public void DoRollDicePhase() throws GameException
     {
         if (playerPhase != PHASE.ROLLDIE)
         {
-            // Log error.
-            return;
+            String msg = "Invalid phase: " + String.valueOf(playerPhase);
+            
+            throw new GameException(GameException.TYPE.PHASE, msg);
         }
         
         die.Roll();
+        
+        movesRemaining = die.GetFaceValue();
         
         OnDieRolled();
         
         EndPhase();
     }
     
-    public void DoMovePawnsPhase()
+    public void DoMovePawnsPhase() throws GameException
     {
         if (playerPhase != PHASE.MOVEPAWNS)
         {
-            // Log error.
-            return;
+            String msg = "Invalid phase: " + String.valueOf(playerPhase);
+            
+            throw new GameException(GameException.TYPE.PHASE, msg);
         }
         
         
-        Pawn pawn = actingPlayer.GetStrategy().ChoosePawn();
-
-        pawn.Advance();
-        movesTaken++;
-
-        OnPawnMoved();
+        //Pawn pawn = actingPlayer.GetStrategy().ChoosePawn();
+        Pawn pawn = this.GetSelectedPawn();
+        Field curSquare = pawn.GetSquare();
+        Field nextSquare = curSquare.GetNext();
         
-        if (movesTaken >= die.GetFaceValue())
+        if (curSquare instanceof Goal
+         && ((Goal)curSquare).GetOwner() == actingPlayer)
+            nextSquare = ((Goal)curSquare).GetNextGoal();
+        
+        Pawn next = (nextSquare != null ? nextSquare.GetOccupant() : null);
+        
+        // Only allow pawns owned by the acting player to be moved.
+        if (pawn.GetPlayerId() != actingPlayer.GetPlayerId())
+            throw new GameException(GameException.TYPE.PAWN_NOT_OWNED, PAWN_NOT_OWNED);
+        
+        // Only allow pawns to be moved onto the board if a six was rolled.
+        if (curSquare instanceof Home && movesRemaining < 6)
+            throw new GameException(GameException.TYPE.PAWN_AT_HOME, PAWN_AT_HOME);
+        
+        // Only allow pawns that are not blocked to be moved.
+        if (next != null && next.GetPlayerId() == actingPlayer.GetPlayerId())
+            throw new GameException(GameException.TYPE.PAWN_BLOCKED, PAWN_BLOCKED);
+        
+        // Consume all moves if the pawn is moving onto the board.
+        if (pawn.GetSquare() instanceof Home)
+            movesRemaining = 0;
+        else
+            movesRemaining--;
+        
+        pawn.Advance();
+
+        // Event trigger for the "bumped" pawn.
+        if (next != null)
+            OnPawnMoved(next);
+        
+        // Event trigger for the moved pawn.
+        OnPawnMoved(pawn);
+        
+        // End the phase if no moves remaining.
+        if (movesRemaining <= 0)
             EndPhase();
     }
     
-    public void DoEndTurnPhase()
+    public void DoEndTurnPhase() throws GameException
     {
         if (playerPhase != PHASE.ENDTURN)
         {
-            // Log error.
-            return;
+            String msg = "Invalid phase: " + String.valueOf(playerPhase);
+            
+            throw new GameException(GameException.TYPE.PHASE, msg);
         }
         
         EndTurn();
@@ -267,7 +346,10 @@ public class Board {
         EndPhase();
     }
     
+    
+    
     // Events
+    
     public void AddGameEventListener(ActionListener event)
     {
         gameEventListeners.add(event);
@@ -280,7 +362,7 @@ public class Board {
     
     public void OnTurnStart()
     {
-        ActionEvent ae = new ActionEvent(this, 0, "TURNSTART");
+        ActionEvent ae = new BoardEvent(this, actingPlayer, 0, "TURNSTART");
         
         for (ActionListener e : gameEventListeners)
             e.actionPerformed(ae);
@@ -288,7 +370,7 @@ public class Board {
     
     public void OnTurnEnd()
     {
-        ActionEvent ae = new ActionEvent(this, 0, "TURNEND");
+        ActionEvent ae = new BoardEvent(this, actingPlayer, 0, "TURNEND");
         
         for (ActionListener e : gameEventListeners)
             e.actionPerformed(ae);
@@ -303,7 +385,7 @@ public class Board {
                 pausedForInput = true;
         }
         
-        ActionEvent ae = new ActionEvent(this, 0, "PHASESTART");
+        ActionEvent ae = new BoardEvent(this, actingPlayer, 0, "PHASESTART");
         
         for (ActionListener e : gameEventListeners)
             e.actionPerformed(ae);
@@ -318,7 +400,7 @@ public class Board {
                 pausedForInput = false;
         }
         
-        ActionEvent ae = new ActionEvent(this, 0, "PHASEEND");
+        ActionEvent ae = new BoardEvent(this, actingPlayer, 0, "PHASEEND");
         
         for (ActionListener e : gameEventListeners)
             e.actionPerformed(ae);
@@ -326,15 +408,16 @@ public class Board {
     
     public void OnDieRolled()
     {
-        ActionEvent ae = new ActionEvent(this, 0, "DIEROLLED");
+        ActionEvent ae = new BoardEvent(this, die, 0, "DIEROLLED");
         
         for (ActionListener e : gameEventListeners)
             e.actionPerformed(ae);
     }
     
-    public void OnPawnMoved()
+    public void OnPawnMoved(Pawn pawn)
     {
-        ActionEvent ae = new ActionEvent(this, 0, "PAWNMOVED");
+        Object[] tags = new Object[] { pawn, pawn.GetSquare() };
+        ActionEvent ae = new BoardEvent(this, tags, 0, "PAWNMOVED");
         
         for (ActionListener e : gameEventListeners)
             e.actionPerformed(ae);
@@ -349,9 +432,9 @@ public class Board {
         return die;
     }
     
-    public void SetSelectedPawn(Pawn selected)
+    public void SetSelectedPawn(int player, int pawn)
     {
-        this.selectedPawn = selected;
+        this.selectedPawn = this.pawns[player][pawn];
     }
     
     public Pawn GetSelectedPawn()
@@ -359,12 +442,17 @@ public class Board {
         return selectedPawn;
     }
     
+    public int GetRemainingMoves()
+    {
+        return this.movesRemaining;
+    }
+    
     public void SetPlayerTurn(int player)
     {
         playerTurn = player;
         actingPlayer = players[player];
         
-        movesTaken = 0;
+        movesRemaining = 0;
         turnEnded = false;
         SetPlayerPhase(PHASE.STARTTURN);
         

@@ -8,6 +8,9 @@ package LudoApplication;
  *
  * @author Jason
  */
-public class BoardEventListener {
-    
+public class Home extends Field{
+    public Home(int id)
+    {
+        super(id);
+    }
 }

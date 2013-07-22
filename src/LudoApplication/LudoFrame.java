@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Random;
+import java.util.ArrayList;
 
 /**
  *
@@ -17,11 +18,13 @@ import java.util.Random;
  */
 public class LudoFrame extends javax.swing.JFrame {
     
+    private final int SQUAREDIST = 44;
+    
     private Board gameboard = null;
     
-    private Point[] squares = null;
-    private Point[][] homeSquares = null;
+    private ArrayList<Point> squares = null;
     
+    private ArrayList<JLabel> pawns = null;
     
     private Timer diceTimer = null;
     private TimerTask diceUpdateTask = null;
@@ -73,6 +76,22 @@ public class LudoFrame extends javax.swing.JFrame {
         lblBluePawn2 = new javax.swing.JLabel();
         lblBluePawn3 = new javax.swing.JLabel();
         lblBluePawn4 = new javax.swing.JLabel();
+        lblBlueName = new javax.swing.JLabel();
+        lblBlueType = new javax.swing.JLabel();
+        cboBlueType = new javax.swing.JComboBox();
+        txtBlueName = new javax.swing.JTextField();
+        lblRedName = new javax.swing.JLabel();
+        lblRedType = new javax.swing.JLabel();
+        txtRedName = new javax.swing.JTextField();
+        cboRedType = new javax.swing.JComboBox();
+        lblYellowName = new javax.swing.JLabel();
+        lblYellowType = new javax.swing.JLabel();
+        cboYellowType = new javax.swing.JComboBox();
+        txtYellowName = new javax.swing.JTextField();
+        lblYellowName1 = new javax.swing.JLabel();
+        cboYellowType1 = new javax.swing.JComboBox();
+        txtYellowName1 = new javax.swing.JTextField();
+        lblYellowType1 = new javax.swing.JLabel();
         lblBoard = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -139,84 +158,169 @@ public class LudoFrame extends javax.swing.JFrame {
         );
 
         lblGreenPawn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/GreenPawn.png"))); // NOI18N
+        lblGreenPawn1.setToolTipText("");
         lblGreenPawn1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 0, true));
-        lblGreenPawn1.setBounds(410, 330, 37, 37);
+        lblGreenPawn1.setBounds(390, 330, 37, 37);
         jLayeredPane1.add(lblGreenPawn1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblGreenPawn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/GreenPawn.png"))); // NOI18N
+        lblGreenPawn2.setToolTipText("");
         lblGreenPawn2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblGreenPawn2.setBounds(450, 330, 37, 37);
+        lblGreenPawn2.setBounds(430, 330, 37, 37);
         jLayeredPane1.add(lblGreenPawn2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblGreenPawn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/GreenPawn.png"))); // NOI18N
+        lblGreenPawn3.setToolTipText("");
         lblGreenPawn3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblGreenPawn3.setBounds(410, 370, 37, 37);
+        lblGreenPawn3.setBounds(390, 370, 37, 37);
         jLayeredPane1.add(lblGreenPawn3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblGreenPawn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/GreenPawn.png"))); // NOI18N
+        lblGreenPawn4.setToolTipText("");
         lblGreenPawn4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblGreenPawn4.setBounds(450, 370, 37, 37);
+        lblGreenPawn4.setBounds(430, 370, 37, 37);
         jLayeredPane1.add(lblGreenPawn4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblYellowPawn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/YellowPawn.png"))); // NOI18N
+        lblYellowPawn1.setToolTipText("");
         lblYellowPawn1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblYellowPawn1.setBounds(330, 20, 37, 37);
+        lblYellowPawn1.setBounds(390, 40, 37, 37);
         jLayeredPane1.add(lblYellowPawn1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblYellowPawn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/YellowPawn.png"))); // NOI18N
+        lblYellowPawn2.setToolTipText("");
         lblYellowPawn2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblYellowPawn2.setBounds(370, 20, 37, 37);
+        lblYellowPawn2.setBounds(430, 40, 37, 37);
         jLayeredPane1.add(lblYellowPawn2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblYellowPawn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/YellowPawn.png"))); // NOI18N
+        lblYellowPawn3.setToolTipText("");
         lblYellowPawn3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblYellowPawn3.setBounds(370, 60, 37, 37);
+        lblYellowPawn3.setBounds(430, 80, 37, 37);
         jLayeredPane1.add(lblYellowPawn3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblYellowPawn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/YellowPawn.png"))); // NOI18N
+        lblYellowPawn4.setToolTipText("");
         lblYellowPawn4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblYellowPawn4.setBounds(330, 60, 37, 37);
+        lblYellowPawn4.setBounds(390, 80, 37, 37);
         jLayeredPane1.add(lblYellowPawn4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblRedPawn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/RedPawn.png"))); // NOI18N
+        lblRedPawn1.setToolTipText("");
         lblRedPawn1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblRedPawn1.setBounds(110, 410, 37, 37);
+        lblRedPawn1.setBounds(70, 390, 37, 37);
         jLayeredPane1.add(lblRedPawn1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblRedPawn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/RedPawn.png"))); // NOI18N
+        lblRedPawn2.setToolTipText("");
         lblRedPawn2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblRedPawn2.setBounds(150, 410, 37, 37);
+        lblRedPawn2.setBounds(110, 390, 37, 37);
         jLayeredPane1.add(lblRedPawn2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblRedPawn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/RedPawn.png"))); // NOI18N
+        lblRedPawn3.setToolTipText("");
         lblRedPawn3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblRedPawn3.setBounds(150, 450, 37, 37);
+        lblRedPawn3.setBounds(110, 430, 37, 37);
         jLayeredPane1.add(lblRedPawn3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblRedPawn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/RedPawn.png"))); // NOI18N
+        lblRedPawn4.setToolTipText("");
         lblRedPawn4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblRedPawn4.setBounds(110, 450, 37, 37);
+        lblRedPawn4.setBounds(70, 430, 37, 37);
         jLayeredPane1.add(lblRedPawn4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblBluePawn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/BluePawn.png"))); // NOI18N
+        lblBluePawn1.setToolTipText("");
         lblBluePawn1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblBluePawn1.setBounds(30, 100, 37, 37);
+        lblBluePawn1.setBounds(70, 90, 37, 37);
         jLayeredPane1.add(lblBluePawn1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblBluePawn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/BluePawn.png"))); // NOI18N
+        lblBluePawn2.setToolTipText("");
         lblBluePawn2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblBluePawn2.setBounds(70, 100, 37, 37);
+        lblBluePawn2.setBounds(110, 90, 37, 37);
         jLayeredPane1.add(lblBluePawn2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblBluePawn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/BluePawn.png"))); // NOI18N
+        lblBluePawn3.setToolTipText("");
         lblBluePawn3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblBluePawn3.setBounds(70, 140, 37, 37);
+        lblBluePawn3.setBounds(110, 130, 37, 37);
         jLayeredPane1.add(lblBluePawn3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblBluePawn4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/BluePawn.png"))); // NOI18N
+        lblBluePawn4.setToolTipText("");
         lblBluePawn4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
-        lblBluePawn4.setBounds(30, 140, 37, 37);
+        lblBluePawn4.setBounds(70, 130, 37, 37);
         jLayeredPane1.add(lblBluePawn4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblBlueName.setText("Blue:");
+        lblBlueName.setToolTipText("");
+        lblBlueName.setBounds(20, 40, 40, 14);
+        jLayeredPane1.add(lblBlueName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblBlueType.setText("Type:");
+        lblBlueType.setBounds(20, 60, 40, 14);
+        jLayeredPane1.add(lblBlueType, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        cboBlueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", " " }));
+        cboBlueType.setBounds(70, 60, 110, 20);
+        jLayeredPane1.add(cboBlueType, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        txtBlueName.setText("Player 2");
+        txtBlueName.setBounds(70, 40, 110, 20);
+        jLayeredPane1.add(txtBlueName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblRedName.setText("Red:");
+        lblRedName.setToolTipText("");
+        lblRedName.setBounds(20, 340, 40, 14);
+        jLayeredPane1.add(lblRedName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblRedType.setText("Type:");
+        lblRedType.setBounds(20, 360, 40, 14);
+        jLayeredPane1.add(lblRedType, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        txtRedName.setText("Player 1");
+        txtRedName.setBounds(70, 340, 110, 20);
+        jLayeredPane1.add(txtRedName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        cboRedType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", " " }));
+        cboRedType.setSelectedIndex(1);
+        cboRedType.setBounds(70, 360, 110, 20);
+        jLayeredPane1.add(cboRedType, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblYellowName.setText("Yellow:");
+        lblYellowName.setToolTipText("");
+        lblYellowName.setBounds(340, 130, 40, 14);
+        jLayeredPane1.add(lblYellowName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblYellowType.setText("Type:");
+        lblYellowType.setBounds(340, 150, 40, 14);
+        jLayeredPane1.add(lblYellowType, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        cboYellowType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", " " }));
+        cboYellowType.setBounds(390, 150, 110, 20);
+        jLayeredPane1.add(cboYellowType, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        txtYellowName.setText("Player 3");
+        txtYellowName.setBounds(390, 130, 110, 20);
+        jLayeredPane1.add(txtYellowName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblYellowName1.setText("Green:");
+        lblYellowName1.setToolTipText("");
+        lblYellowName1.setBounds(340, 430, 40, 14);
+        jLayeredPane1.add(lblYellowName1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        cboYellowType1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", " " }));
+        cboYellowType1.setBounds(390, 450, 110, 20);
+        jLayeredPane1.add(cboYellowType1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        txtYellowName1.setText("Player 4");
+        txtYellowName1.setBounds(390, 430, 110, 20);
+        jLayeredPane1.add(txtYellowName1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        lblYellowType1.setText("Type:");
+        lblYellowType1.setBounds(340, 450, 40, 14);
+        jLayeredPane1.add(lblYellowType1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblBoard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LudoApplication/Board.png"))); // NOI18N
         lblBoard.setBounds(0, 0, 512, 512);
@@ -271,32 +375,109 @@ public class LudoFrame extends javax.swing.JFrame {
         gameLog = new DefaultListModel();
         jList1.setModel(gameLog);
         
-        MouseAdapter pawnMouseAdapter = new MouseAdapter()  { public void mouseEntered(MouseEvent evt) { PawnMouseEntered(evt); }
-                                                              public void mouseExited(MouseEvent evt) { PawnMouseExited(evt); }};
-        lblRedPawn1.addMouseListener(pawnMouseAdapter);
-        lblRedPawn2.addMouseListener(pawnMouseAdapter);
-        lblRedPawn3.addMouseListener(pawnMouseAdapter);
-        lblRedPawn4.addMouseListener(pawnMouseAdapter);
-        lblBluePawn1.addMouseListener(pawnMouseAdapter);
-        lblBluePawn2.addMouseListener(pawnMouseAdapter);
-        lblBluePawn3.addMouseListener(pawnMouseAdapter);
-        lblBluePawn4.addMouseListener(pawnMouseAdapter);
-        lblYellowPawn1.addMouseListener(pawnMouseAdapter);
-        lblYellowPawn2.addMouseListener(pawnMouseAdapter);
-        lblYellowPawn3.addMouseListener(pawnMouseAdapter);
-        lblYellowPawn4.addMouseListener(pawnMouseAdapter);
-        lblGreenPawn1.addMouseListener(pawnMouseAdapter);
-        lblGreenPawn2.addMouseListener(pawnMouseAdapter);
-        lblGreenPawn3.addMouseListener(pawnMouseAdapter);
-        lblGreenPawn4.addMouseListener(pawnMouseAdapter);
+        initPawns();
+        initSquares();
     }
+    
+    private void initPawns()
+    {
+        pawns = new ArrayList<JLabel>();
+        pawns.add(lblRedPawn1);
+        pawns.add(lblRedPawn2);
+        pawns.add(lblRedPawn3);
+        pawns.add(lblRedPawn4);
+        pawns.add(lblBluePawn1);
+        pawns.add(lblBluePawn2);
+        pawns.add(lblBluePawn3);
+        pawns.add(lblBluePawn4);
+        pawns.add(lblYellowPawn1);
+        pawns.add(lblYellowPawn2);
+        pawns.add(lblYellowPawn3);
+        pawns.add(lblYellowPawn4);
+        pawns.add(lblGreenPawn1);
+        pawns.add(lblGreenPawn2);
+        pawns.add(lblGreenPawn3);
+        pawns.add(lblGreenPawn4);
+        
+        
+        MouseAdapter pawnMouseAdapter = new MouseAdapter()  { public void mouseEntered(MouseEvent evt) { PawnMouseEntered(evt); }
+                                                              public void mouseExited(MouseEvent evt) { PawnMouseExited(evt); };
+                                                              public void mousePressed(MouseEvent evt) { PawnMouseClicked(evt); }};
+        
+        for (JLabel lbl : pawns)
+            lbl.addMouseListener(pawnMouseAdapter);
+    }
+    
+    private void initSquares()
+    {
+        squares = new ArrayList<Point>();
+        
+        // Set player 1's exterior 10 squares.
+        squares.add(new Point(238, 456));
+        for (int i = 0; i < 4; i++)
+            squares.add(new Point(193, (int)(456 - i * SQUAREDIST)));
+        
+        for (int i = 0; i < 5; i++)
+            squares.add(new Point((int)(193  - i * SQUAREDIST), 280));
+        
+        // Set player 2's exterior 10 squares.
+        squares.add(new Point(18, 238));
+        for (int i = 0; i < 4; i++)
+            squares.add(new Point((int)(18 + i * SQUAREDIST), 193));
+        
+        for (int i = 0; i < 5; i++)
+            squares.add(new Point(193, (int)(193 - i * SQUAREDIST)));
+        
+        // Set player 3's exterior 10 squares.
+        squares.add(new Point(238, 18));
+        for (int i = 0; i < 4; i++)
+            squares.add(new Point(280, (int)(18 + i * SQUAREDIST)));
+        
+        for (int i = 0; i < 5; i++)
+            squares.add(new Point((int)(280 + i * SQUAREDIST), 193));
+        
+        // Set player 4's exterior 10 squares.
+        squares.add(new Point(456, 238));
+        for (int i = 0; i < 4; i++)
+            squares.add(new Point((int)(456 - i * SQUAREDIST), 280));
+        
+        for (int i = 0; i < 5; i++)
+            squares.add(new Point(280, (int)(280 + i * SQUAREDIST)));
+        
+        // Set player 1's interior 4 squares.
+        for (int i = 0; i < 4; i++)
+            squares.add(new Point(238, (int)(412 - i * SQUAREDIST)));
+        
+        // Set player 2's interior 4 squares.
+        for (int i = 0; i < 4; i++)
+            squares.add(new Point((int)(62 + i * SQUAREDIST), 238));
+        
+        // Set player 3's interior 4 squares.
+        for (int i = 0; i < 4; i++)
+            squares.add(new Point(238, (int)(62 + i * SQUAREDIST)));
+        
+        // Set player 4's interior 4 squares.
+        for (int i = 0; i < 4; i++)
+            squares.add(new Point((int)(456 - i * SQUAREDIST), 238));
+        
+        // Set home squares.
+        for (int i = 0; i < 16; i++)
+            squares.add(pawns.get(i).getLocation());
+    }       
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         gameboard.StartGame();
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Application.gameBoard.DoRollDicePhase();
+        try
+        {
+            Application.gameBoard.DoRollDicePhase();
+        }
+        catch (GameException e)
+        {
+
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
         
     private void PawnMouseEntered(java.awt.event.MouseEvent evt)
@@ -305,10 +486,30 @@ public class LudoFrame extends javax.swing.JFrame {
         pawn.setBorder(BorderFactory.createLineBorder(Color.black, 1, true));
     }
     
+    private void PawnMouseClicked(java.awt.event.MouseEvent evt)
+    {
+        JLabel lblPawn = (JLabel)evt.getSource();
+        
+        int index = pawns.indexOf(lblPawn);
+        int player = index / 4;
+        int pawn = index % 4;
+            
+        gameboard.SetSelectedPawn(player, pawn);
+        
+        try
+        {
+            gameboard.DoMovePawnsPhase();
+        }
+        catch (GameException e)
+        {
+            
+        }
+    }
+    
     private void PawnMouseExited(java.awt.event.MouseEvent evt)
     {
-        JLabel pawn = (JLabel)evt.getSource();
-        pawn.setBorder(null);
+        JLabel lblPawn = (JLabel)evt.getSource();
+        lblPawn.setBorder(null);
     }
     
     private void GameEventHandler(ActionEvent evt)
@@ -323,6 +524,7 @@ public class LudoFrame extends javax.swing.JFrame {
             case "PHASEEND": PhaseEndEventHandler(evt); break;
             case "DIEROLLED": DieRolledEventHandler(evt); break;
             case "PAWNMOVED": PawnMovedEventHandler(evt); break;
+            case "INVALIDMOVE": InvalidMoveEventHandler(evt); break;
         }
     }
     
@@ -348,8 +550,10 @@ public class LudoFrame extends javax.swing.JFrame {
             case ROLLDIE: msg = "Please roll the die."; break;
             case MOVEPAWNS: msg = "Please select the pawns to move."; break;
             case ENDTURN: break;
-            
         }   
+        
+        if (phase == Board.PHASE.ROLLDIE)
+            jButton1.setEnabled(true);
         
         gameLog.addElement(msg);
     }
@@ -358,8 +562,8 @@ public class LudoFrame extends javax.swing.JFrame {
     {
         Board board = Application.gameBoard;
         
-        //if (board.GetPlayerPhase() == Board.PHASE.ROLLDIE)
-        //    board.PauseGame() // Wait for die animation to end.
+        if (board.GetPlayerPhase() == Board.PHASE.ROLLDIE)
+            gameboard.PauseGame(); // Wait for die animation to end.
     }
     
     private void DieRolledEventHandler(ActionEvent evt)
@@ -367,13 +571,37 @@ public class LudoFrame extends javax.swing.JFrame {
         String msg = "The die has been cast.";
         gameLog.addElement(msg);
         
-        gameboard.PauseGame();
+        jButton1.setEnabled(false);
         PlayDiceAnimation();
     }
     
     private void PawnMovedEventHandler(ActionEvent evt)
     {
+        BoardEvent bevt = (BoardEvent)evt;
+        Object[] tags = (Object[])bevt.getTags();
+        Pawn pawn = (Pawn)tags[0];
+        Field square = (Field)tags[1];
         
+        int playerId = pawn.GetPlayerId();
+        int pawnId = pawn.GetPawnId();
+        
+        JLabel lblPawn = pawns.get(playerId * 4 + pawnId);
+        lblPawn.setBorder(null);
+        
+        if (square != null)
+            lblPawn.setLocation(squares.get(square.GetId()));
+        else
+            lblPawn.setVisible(false);
+        
+        jLabel1.setText(String.valueOf(gameboard.GetRemainingMoves()));
+    }
+    
+    private void InvalidMoveEventHandler(ActionEvent evt)
+    {
+        BoardEvent bevt = (BoardEvent)evt;
+        Object[] tags = (Object[])bevt.getTags();
+        String msg = (String)tags[0];
+        gameLog.addElement(msg);
     }
     
     private void OnDiceAnimationEnd()
@@ -430,6 +658,10 @@ public class LudoFrame extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox cboBlueType;
+    private javax.swing.JComboBox cboRedType;
+    private javax.swing.JComboBox cboYellowType;
+    private javax.swing.JComboBox cboYellowType1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -441,22 +673,34 @@ public class LudoFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblBlueName;
     private javax.swing.JLabel lblBluePawn1;
     private javax.swing.JLabel lblBluePawn2;
     private javax.swing.JLabel lblBluePawn3;
     private javax.swing.JLabel lblBluePawn4;
+    private javax.swing.JLabel lblBlueType;
     private javax.swing.JLabel lblBoard;
     private javax.swing.JLabel lblGreenPawn1;
     private javax.swing.JLabel lblGreenPawn2;
     private javax.swing.JLabel lblGreenPawn3;
     private javax.swing.JLabel lblGreenPawn4;
+    private javax.swing.JLabel lblRedName;
     private javax.swing.JLabel lblRedPawn1;
     private javax.swing.JLabel lblRedPawn2;
     private javax.swing.JLabel lblRedPawn3;
     private javax.swing.JLabel lblRedPawn4;
+    private javax.swing.JLabel lblRedType;
+    private javax.swing.JLabel lblYellowName;
+    private javax.swing.JLabel lblYellowName1;
     private javax.swing.JLabel lblYellowPawn1;
     private javax.swing.JLabel lblYellowPawn2;
     private javax.swing.JLabel lblYellowPawn3;
     private javax.swing.JLabel lblYellowPawn4;
+    private javax.swing.JLabel lblYellowType;
+    private javax.swing.JLabel lblYellowType1;
+    private javax.swing.JTextField txtBlueName;
+    private javax.swing.JTextField txtRedName;
+    private javax.swing.JTextField txtYellowName;
+    private javax.swing.JTextField txtYellowName1;
     // End of variables declaration//GEN-END:variables
 }
