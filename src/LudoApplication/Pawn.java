@@ -5,8 +5,9 @@
 package LudoApplication;
 
 /**
- *
- * @author Jason
+ * Pawn.java
+ * @author Jason Lib
+ * 
  */
 public class Pawn {
     private int pawnId = -1;

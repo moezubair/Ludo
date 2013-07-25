@@ -7,8 +7,11 @@ package LudoApplication;
 import java.util.Random;
 
 /**
+ * Die.Java
+ * @author Jason Lib
+ * This class creates a Die object which acts like a real die
+ * with a variable face value
  *
- * @author Jason
  */
 public class Die {
     private static Random r;

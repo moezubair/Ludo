@@ -5,8 +5,9 @@
 package LudoApplication;
 
 /**
- *
- * @author Jason
+ * Entry.java
+ * @author Jason Lib
+ * This file implements the Entry field
  */
 public class Entry extends Field {
     private Player belongsTo;

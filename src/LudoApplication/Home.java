@@ -5,8 +5,9 @@
 package LudoApplication;
 
 /**
- *
- * @author Jason
+ * Home.java
+ * @author Jason Lib
+ * Home class which extends Field
  */
 public class Home extends Field{
     public Home(int id)
