@@ -11,7 +11,7 @@ package LudoApplication;
 public class Junction extends Field{
     private Player belongsTo;
     
-    private Field nextGoal;
+    private Goal nextGoal;
     
     public Junction(int index, Player owner)
     {
@@ -20,12 +20,12 @@ public class Junction extends Field{
         this.belongsTo  = owner;
     }
     
-    public void SetNextGoal(Field next)
+    public void SetNextGoal(Goal next)
     {
         this.nextGoal = next;
     }
     
-    public Field GetNextGoal()
+    public Goal GetNextGoal()
     {
         return this.nextGoal;
     }

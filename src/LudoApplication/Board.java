@@ -21,7 +21,7 @@ public class Board {
     private Pawn[][] pawns;
     
     private Field[] exteriorSquares;
-    private Field[][] goalSquares;
+    private Goal[][] goalSquares;
     private Home[][] homeSquares;
     
     private Die die = null;
@@ -101,15 +101,15 @@ public class Board {
         // Create the interior squares. These squares are treated as regular
         // squares that a pawn needs to traverse after reaching the player's
         // exterior junction square.
-        goalSquares = new Field[MAXPLAYERS][];
+        goalSquares = new Goal[MAXPLAYERS][];
         for (int i = 0 ; i < goalSquares.length; i++)
         {
-            goalSquares[i] = new Field[INTERIORSQUARES];
+            goalSquares[i] = new Goal[INTERIORSQUARES];
             for (int j = 0; j < goalSquares[i].length; j++)
             {
                 int id = EXTERIORSQUARES + (i * INTERIORSQUARES) + j;
                 
-                goalSquares[i][j] = new Home(id);
+                goalSquares[i][j] = new Goal(id);
                 
                 if (j == 0)
                 {
