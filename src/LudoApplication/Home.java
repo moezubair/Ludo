@@ -14,4 +14,10 @@ public class Home extends Field{
     {
         super(id);
     }
+    
+    @Override
+    public Field GetNextForPlayer(Player p, int distance)
+    {
+        return next;
+    }
 }

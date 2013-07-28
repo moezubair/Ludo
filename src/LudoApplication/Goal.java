@@ -9,29 +9,8 @@ package LudoApplication;
  * @author Jason
  */
 public class Goal extends Field{
-    private Player belongsTo;
-    
-    private Field nextGoal;
-    
-    public Goal(int index, Player owner)
+    public Goal(int id)
     {
-        super(index);
-        
-        this.belongsTo  = owner;
-    }
-    
-    public void SetNextGoal(Field next)
-    {
-        this.nextGoal = next;
-    }
-    
-    public Field GetNextGoal()
-    {
-        return this.nextGoal;
-    }
-    
-    public Player GetOwner()
-    {
-        return this.belongsTo;
+        super(id);
     }
 }

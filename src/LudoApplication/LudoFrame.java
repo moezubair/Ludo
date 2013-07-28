@@ -26,6 +26,8 @@ public class LudoFrame extends javax.swing.JFrame {
     
     private ArrayList<JLabel> pawns = null;
     
+    private Color[] colors = new Color[] { Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN };
+    
     private Timer diceTimer = null;
     private TimerTask diceUpdateTask = null;
     private boolean animateDie = false;
@@ -57,6 +59,7 @@ public class LudoFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
         jLayeredPane1 = new javax.swing.JLayeredPane();
@@ -122,36 +125,42 @@ public class LudoFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Player 1: Roll");
+        jLabel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.setDoubleBuffered(true);
         jScrollPane2.setViewportView(jList1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(46, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(48, 48, 48))
+            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(66, 66, 66))))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(72, 72, 72)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addGap(21, 21, 21)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2))
@@ -352,9 +361,7 @@ public class LudoFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jLayeredPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
         );
 
         pack();
@@ -530,8 +537,11 @@ public class LudoFrame extends javax.swing.JFrame {
     
     private void TurnStartEventHandler(ActionEvent evt)
     {
+        int playerId = gameboard.GetActingPlayer().GetPlayerId();
         String msg = "It is " + gameboard.GetActingPlayer().GetName() + "'s turn.";
-        gameLog.addElement(msg);
+        AddLogMessage(msg);
+        
+        jLabel3.setBackground(colors[playerId]);
     }
     
     private void TurnEndEventHandler(ActionEvent evt)
@@ -542,20 +552,41 @@ public class LudoFrame extends javax.swing.JFrame {
     private void PhaseStartEventHandler(ActionEvent evt)
     {
         String msg = "";
+        int playerId = gameboard.GetActingPlayer().GetPlayerId();
+        String playerName = gameboard.GetActingPlayer().GetName();
         Board.PHASE phase = gameboard.GetPlayerPhase();
         
         switch(phase)
         {
             case STARTTURN: break;
             case ROLLDIE: msg = "Please roll the die."; break;
-            case MOVEPAWNS: msg = "Please select the pawns to move."; break;
-            case ENDTURN: break;
-        }   
+            case MOVEPAWNS: msg = "Please select a pawn."; break;
+            case ENDTURN: msg = "-"; break;
+            case GAMEWON: msg = playerName + " wins! Well done!"; break;
+        }
         
+        // Update game status text.
+        if (phase == Board.PHASE.STARTTURN)
+            jLabel3.setText(playerName + ": Start");
+        if (phase == Board.PHASE.ROLLDIE)
+            jLabel3.setText(playerName + ": Roll");
+        else if (phase == Board.PHASE.MOVEPAWNS)
+            jLabel3.setText(playerName + ": Move");
+        
+        // Disable dice roll button.
         if (phase == Board.PHASE.ROLLDIE)
             jButton1.setEnabled(true);
         
-        gameLog.addElement(msg);
+        // Check if there are no pawns to move.
+        if (phase == Board.PHASE.MOVEPAWNS
+         && gameboard.GetAvailablePawns(playerId).length == 0)
+        {
+            msg = "No pawns to move.";
+            gameboard.EndPhase();
+        }
+            
+        
+        AddLogMessage(msg);
     }
     
     private void PhaseEndEventHandler(ActionEvent evt)
@@ -569,7 +600,7 @@ public class LudoFrame extends javax.swing.JFrame {
     private void DieRolledEventHandler(ActionEvent evt)
     {
         String msg = "The die has been cast.";
-        gameLog.addElement(msg);
+        AddLogMessage(msg);
         
         jButton1.setEnabled(false);
         PlayDiceAnimation();
@@ -601,7 +632,7 @@ public class LudoFrame extends javax.swing.JFrame {
         BoardEvent bevt = (BoardEvent)evt;
         Object[] tags = (Object[])bevt.getTags();
         String msg = (String)tags[0];
-        gameLog.addElement(msg);
+        AddLogMessage(msg);
     }
     
     private void OnDiceAnimationEnd()
@@ -609,7 +640,7 @@ public class LudoFrame extends javax.swing.JFrame {
         int dieValue = gameboard.GetDie().GetFaceValue();
         String msg = gameboard.GetActingPlayer().GetName();
         msg += " has rolled a " + String.valueOf(dieValue) + ".";
-        gameLog.addElement(msg);
+        AddLogMessage(msg);
         
         jLabel1.setText(String.valueOf(dieValue));
         gameboard.UnpauseGame();
@@ -657,6 +688,16 @@ public class LudoFrame extends javax.swing.JFrame {
         dieAnimationTime++;
     }
     
+    private void AddLogMessage(String msg)
+    {
+        if (msg == "" || msg == null)
+            return;
+        
+        String num = String.valueOf(gameLog.size() % 100);
+        
+        gameLog.insertElementAt("- " + num + ": " + msg, 0);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboBlueType;
     private javax.swing.JComboBox cboRedType;
@@ -665,6 +706,7 @@ public class LudoFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;

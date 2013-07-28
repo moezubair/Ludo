@@ -12,10 +12,11 @@ package LudoApplication;
 public class Pawn {
     private int pawnId = -1;
     private Player owner = null;
+    
     private Home home = null;
     private Field isOn = null;
     
-    private boolean reachedGoal = false;
+    private int distanceTravelled = 0;
     
     public Pawn(int pawnId, Player owner, Home home)
     {
@@ -23,17 +24,6 @@ public class Pawn {
         this.owner = owner;
         this.home = home;
         this.isOn = home;
-    }
-    
-    public void Advance()
-    {
-        if (isOn == null)
-            return;
-        
-        if(isOn instanceof Goal && ((Goal)isOn).GetOwner() == owner)
-            SetSquare(((Goal)isOn).GetNextGoal());
-        else
-            SetSquare(isOn.GetNext());
     }
     
     public int GetPawnId()
@@ -44,6 +34,16 @@ public class Pawn {
     public int GetPlayerId()
     {
         return owner.GetPlayerId();
+    }
+    
+    public boolean GetIsHome()
+    {
+        return isOn instanceof Home;
+    }
+    
+    public boolean GetIsAtGoal()
+    {
+        return isOn instanceof Goal;
     }
     
     public void SetSquare(Field value)
@@ -61,13 +61,19 @@ public class Pawn {
             isOn.SetOccupant(this);
     }
     
-    public void ReturnHome()
-    {
-        SetSquare(home);
-    }
-    
     public Field GetSquare()
     {
         return isOn;
+    }
+    
+    public void addDistance(int distance)
+    {
+        distanceTravelled += distance;
+    }
+    
+    public void ReturnHome()
+    {
+        distanceTravelled = 0;
+        SetSquare(home);
     }
 }

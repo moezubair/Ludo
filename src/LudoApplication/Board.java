@@ -33,7 +33,7 @@ public class Board {
     private PHASE playerPhase = PHASE.NONE;
     private boolean phaseEnded = false;
 
-    private int movesRemaining = 0;
+    private int valueRolled = 0;
    
     
     private Player actingPlayer = null;
@@ -85,7 +85,7 @@ public class Board {
         for (int i = 0; i < exteriorSquares.length; i++)
         {
             if (i % PLAYERDISTANCE == 0)
-                exteriorSquares[i] = new Goal(i, players[i / PLAYERDISTANCE]);
+                exteriorSquares[i] = new Junction(i, players[i / PLAYERDISTANCE]);
             else if (i % PLAYERDISTANCE == 1)
                 exteriorSquares[i] = new Entry(i, players[i / PLAYERDISTANCE]);
             else
@@ -100,7 +100,7 @@ public class Board {
         
         // Create the interior squares. These squares are treated as regular
         // squares that a pawn needs to traverse after reaching the player's
-        // exterior goal square.
+        // exterior junction square.
         goalSquares = new Field[MAXPLAYERS][];
         for (int i = 0 ; i < goalSquares.length; i++)
         {
@@ -109,12 +109,12 @@ public class Board {
             {
                 int id = EXTERIORSQUARES + (i * INTERIORSQUARES) + j;
                 
-                goalSquares[i][j] = new Field(id);
+                goalSquares[i][j] = new Home(id);
                 
                 if (j == 0)
                 {
-                    Goal goal = (Goal)exteriorSquares[i * PLAYERDISTANCE];
-                    goal.SetNextGoal(goalSquares[i][j]);
+                    Junction junction = (Junction)exteriorSquares[i * PLAYERDISTANCE];
+                    junction.SetNextGoal(goalSquares[i][j]);
                 }
                 
                 if (j > 0)
@@ -152,7 +152,7 @@ public class Board {
         }
         
         // Create a new 6 sided die.
-        die = new Die(100);
+        die = new Die(6);
         
         // Setup the game update loop.
         gameUpdateInterval = 100;
@@ -272,7 +272,7 @@ public class Board {
         
         die.Roll();
         
-        movesRemaining = die.GetFaceValue();
+        valueRolled = die.GetFaceValue();
         
         OnDieRolled();
         
@@ -292,12 +292,7 @@ public class Board {
         //Pawn pawn = actingPlayer.GetStrategy().ChoosePawn();
         Pawn pawn = this.GetSelectedPawn();
         Field curSquare = pawn.GetSquare();
-        Field nextSquare = curSquare.GetNext();
-        
-        if (curSquare instanceof Goal
-         && ((Goal)curSquare).GetOwner() == actingPlayer)
-            nextSquare = ((Goal)curSquare).GetNextGoal();
-        
+        Field nextSquare = curSquare.GetNextForPlayer(actingPlayer, valueRolled);
         Pawn next = (nextSquare != null ? nextSquare.GetOccupant() : null);
         
         // Only allow pawns owned by the acting player to be moved.
@@ -305,20 +300,24 @@ public class Board {
             throw new GameException(GameException.TYPE.PAWN_NOT_OWNED, PAWN_NOT_OWNED);
         
         // Only allow pawns to be moved onto the board if a six was rolled.
-        if (curSquare instanceof Home && movesRemaining < 6)
+        if (curSquare instanceof Home && valueRolled < 6)
             throw new GameException(GameException.TYPE.PAWN_AT_HOME, PAWN_AT_HOME);
         
         // Only allow pawns that are not blocked to be moved.
         if (next != null && next.GetPlayerId() == actingPlayer.GetPlayerId())
             throw new GameException(GameException.TYPE.PAWN_BLOCKED, PAWN_BLOCKED);
         
-        // Consume all moves if the pawn is moving onto the board.
-        if (pawn.GetSquare() instanceof Home)
-            movesRemaining = 0;
-        else
-            movesRemaining--;
+        // Restrict pawns from moving past the end of their goal section.
+        if (nextSquare == null)
+            throw new GameException(GameException.TYPE.EXCEEDS_GOAL);
         
-        pawn.Advance();
+        pawn.SetSquare(nextSquare);
+        
+        // Update the distance travelled for a.i. purposes.
+        if (curSquare instanceof Home)
+            pawn.addDistance(1);
+        else
+            pawn.addDistance(valueRolled);
 
         // Event trigger for the "bumped" pawn.
         if (next != null)
@@ -327,8 +326,10 @@ public class Board {
         // Event trigger for the moved pawn.
         OnPawnMoved(pawn);
         
-        // End the phase if no moves remaining.
-        if (movesRemaining <= 0)
+        // Allow the player to roll again if they rolled a 6.
+        if (valueRolled == 6 && !GetGameWon())
+            SetPlayerPhase(PHASE.ROLLDIE);
+        else
             EndPhase();
     }
     
@@ -341,9 +342,18 @@ public class Board {
             throw new GameException(GameException.TYPE.PHASE, msg);
         }
         
-        EndTurn();
-        
-        EndPhase();
+        if (GetGameWon())
+        {
+            SetPlayerPhase(PHASE.GAMEWON);
+            
+            OnGameWon(actingPlayer);
+        }
+        else
+        {
+            EndTurn();
+
+            EndPhase();
+        }
     }
     
     
@@ -423,7 +433,14 @@ public class Board {
             e.actionPerformed(ae);
     }
     
-    
+    public void OnGameWon(Player p)
+    {
+        Object[] tags = new Object[] { p };
+        ActionEvent ae = new BoardEvent(this, tags, 0, "GAMEWON");
+        
+        for (ActionListener e : gameEventListeners)
+            e.actionPerformed(ae);
+    }
     
     // Accessors
     
@@ -444,7 +461,7 @@ public class Board {
     
     public int GetRemainingMoves()
     {
-        return this.movesRemaining;
+        return this.valueRolled;
     }
     
     public void SetPlayerTurn(int player)
@@ -452,7 +469,7 @@ public class Board {
         playerTurn = player;
         actingPlayer = players[player];
         
-        movesRemaining = 0;
+        valueRolled = 0;
         turnEnded = false;
         SetPlayerPhase(PHASE.STARTTURN);
         
@@ -482,12 +499,53 @@ public class Board {
         return this.playerPhase;
     }
     
+    public Pawn[] GetPlayerPawns(int player)
+    {
+        return (Pawn[])pawns[player].clone();
+    }
+    
+    public Pawn[] GetAvailablePawns(int player)
+    {
+        Player p = players[player];
+        
+        ArrayList<Pawn> result = new ArrayList<Pawn>();
+        for (int i = 0; i < PLAYERPAWNS; i++)
+        {
+            boolean available = true;
+            Pawn pawn = pawns[player][i];
+            Field next = pawn.GetSquare().GetNextForPlayer(p, valueRolled);
+            Pawn nextPawn = (next != null ? next.GetOccupant() : null);
+            
+            available &= (!pawn.GetIsHome() || valueRolled == 6);
+            available &= (nextPawn == null || nextPawn.GetPlayerId() != player);
+            
+            if (available)
+                result.add(pawn);
+        }
+        
+        // Because apparently this is how you use toArray in Java...
+        return result.toArray(new Pawn[0]);
+    }
+    
+    public boolean GetGameWon()
+    {
+        Player p = actingPlayer;
+        int index = p.GetPlayerId();
+        
+        boolean gameWon = true;
+        for (int i = 0; i < PLAYERPAWNS; i++)
+            gameWon &= pawns[index][i].GetIsAtGoal();
+        
+        return gameWon;
+    }
+    
     public enum PHASE
     {
         NONE,
         STARTTURN,
         ROLLDIE,
         MOVEPAWNS,
-        ENDTURN
+        ENDTURN,
+        GAMEWON
     }
 }

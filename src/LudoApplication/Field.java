@@ -9,10 +9,10 @@ package LudoApplication;
  * @author Jason
  */
 public class Field {
-    private int id;
-    private Field next;
+    protected int id;
+    protected Field next;
     
-    private Pawn occupant;    
+    protected Pawn occupant;    
     
     public Field(int id)
     {
@@ -32,6 +32,17 @@ public class Field {
     public Field GetNext()
     {
         return next;
+    }
+    
+    public Field GetNextForPlayer(Player p, int distance)
+    {
+        if (distance == 0)
+            return this;
+        
+        if (next != null)
+            return next.GetNextForPlayer(p, distance - 1);
+                    
+        return null;
     }
    
     public void SetOccupant(Pawn value)

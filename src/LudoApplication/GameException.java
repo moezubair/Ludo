@@ -36,6 +36,7 @@ public class GameException extends Exception{
         PHASE,
         PAWN_NOT_OWNED,
         PAWN_BLOCKED,
-        PAWN_AT_HOME
+        PAWN_AT_HOME,
+        EXCEEDS_GOAL,
     }
 }
