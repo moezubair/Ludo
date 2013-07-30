@@ -518,6 +518,7 @@ public class Board {
             
             available &= (!pawn.GetIsHome() || valueRolled == 6);
             available &= (nextPawn == null || nextPawn.GetPlayerId() != player);
+            available &= (next != null);
             
             if (available)
                 result.add(pawn);

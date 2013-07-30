@@ -1,25 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/LudoFrame.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Board.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Field.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/BoardEvent.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Die.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Application.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Junction.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/RandomStrategy.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Strategy.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/HumanStrategy.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/GreenPawn.png</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Pawn.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Player.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Board.png</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/BluePawn.png</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Entry.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/GameException.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Home.java</file>
-        <file>file:/C:/Users/Jason/Documents/NetBeansProjects/LudoApplication/src/LudoApplication/Goal.java</file>
-    </open-files>
 </project-private>
