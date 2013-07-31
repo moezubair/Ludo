@@ -18,6 +18,7 @@ public class Player {
     {
         this.id = id;
         this.name = name;
+        this.strategy = new HumanStrategy(this);
     }
     
     public int GetPlayerId()
@@ -47,6 +48,11 @@ public class Player {
     
     public boolean IsHumanPlayer()
     {
-        return strategy == null;
+        return strategy instanceof HumanStrategy;
+    }
+    
+    public boolean IsEnabled()
+    {
+        return strategy != null;
     }
 }

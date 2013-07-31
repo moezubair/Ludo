@@ -66,9 +66,14 @@ public class Pawn {
         return isOn;
     }
     
-    public void addDistance(int distance)
+    public void AddDistance(int distance)
     {
         distanceTravelled += distance;
+    }
+    
+    public int GetDistance()
+    {
+        return distanceTravelled;
     }
     
     public void ReturnHome()

@@ -494,13 +494,15 @@
         <Component class="javax.swing.JComboBox" name="cboBlueType">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
+              <StringArray count="8">
                 <StringItem index="0" value="None"/>
                 <StringItem index="1" value="Human"/>
                 <StringItem index="2" value="Random"/>
                 <StringItem index="3" value="Aggressive"/>
                 <StringItem index="4" value="Defensive"/>
-                <StringItem index="5" value=" "/>
+                <StringItem index="5" value="Move-Front"/>
+                <StringItem index="6" value="Move-Back"/>
+                <StringItem index="7" value=" "/>
               </StringArray>
             </Property>
           </Properties>
@@ -554,16 +556,17 @@
         <Component class="javax.swing.JComboBox" name="cboRedType">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
+              <StringArray count="8">
                 <StringItem index="0" value="None"/>
                 <StringItem index="1" value="Human"/>
                 <StringItem index="2" value="Random"/>
                 <StringItem index="3" value="Aggressive"/>
                 <StringItem index="4" value="Defensive"/>
-                <StringItem index="5" value=" "/>
+                <StringItem index="5" value="Move-Front"/>
+                <StringItem index="6" value="Move-Back"/>
+                <StringItem index="7" value=" "/>
               </StringArray>
             </Property>
-            <Property name="selectedIndex" type="int" value="1"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -595,13 +598,15 @@
         <Component class="javax.swing.JComboBox" name="cboYellowType">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
+              <StringArray count="8">
                 <StringItem index="0" value="None"/>
                 <StringItem index="1" value="Human"/>
                 <StringItem index="2" value="Random"/>
                 <StringItem index="3" value="Aggressive"/>
                 <StringItem index="4" value="Defensive"/>
-                <StringItem index="5" value=" "/>
+                <StringItem index="5" value="Move-Front"/>
+                <StringItem index="6" value="Move-Back"/>
+                <StringItem index="7" value=" "/>
               </StringArray>
             </Property>
           </Properties>
@@ -635,13 +640,15 @@
         <Component class="javax.swing.JComboBox" name="cboYellowType1">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
+              <StringArray count="8">
                 <StringItem index="0" value="None"/>
                 <StringItem index="1" value="Human"/>
                 <StringItem index="2" value="Random"/>
                 <StringItem index="3" value="Aggressive"/>
                 <StringItem index="4" value="Defensive"/>
-                <StringItem index="5" value=" "/>
+                <StringItem index="5" value="Move-Front"/>
+                <StringItem index="6" value="Move-Back"/>
+                <StringItem index="7" value=" "/>
               </StringArray>
             </Property>
           </Properties>

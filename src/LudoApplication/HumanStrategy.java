@@ -22,6 +22,6 @@ public class HumanStrategy extends Strategy{
     
     public Pawn ChoosePawn()
     {
-        return Application.gameBoard.GetSelectedPawn();
+        return Application.gameboard.GetSelectedPawn();
     }
 }

@@ -9,11 +9,15 @@ package LudoApplication;
  * @author Jason
  */
 public abstract class Strategy {
-    protected Player owner;
+    protected Player owner = null;
+    protected int ownerId = -1;
+    protected Board gameboard = null;
     
     public Strategy(Player owner)
     {
         this.owner = owner;
+        this.ownerId = owner.GetPlayerId();
+        this.gameboard = Application.gameboard;
     }
     
     public abstract String GetStrategyName();

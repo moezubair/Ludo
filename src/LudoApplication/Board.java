@@ -206,6 +206,9 @@ public class Board {
     {
         int next = (playerTurn + 1) % MAXPLAYERS;
         
+        while (!players[next].IsHumanPlayer())
+            next = (next + 1) % MAXPLAYERS;
+        
         SetPlayerTurn(next);
         
     }
@@ -315,9 +318,9 @@ public class Board {
         
         // Update the distance travelled for a.i. purposes.
         if (curSquare instanceof Home)
-            pawn.addDistance(1);
+            pawn.AddDistance(1);
         else
-            pawn.addDistance(valueRolled);
+            pawn.AddDistance(valueRolled);
 
         // Event trigger for the "bumped" pawn.
         if (next != null)

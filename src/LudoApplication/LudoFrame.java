@@ -271,7 +271,7 @@ public class LudoFrame extends javax.swing.JFrame {
         lblBlueType.setBounds(20, 60, 40, 14);
         jLayeredPane1.add(lblBlueType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        cboBlueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", " " }));
+        cboBlueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", "Move-Front", "Move-Back", " " }));
         cboBlueType.setBounds(70, 60, 110, 20);
         jLayeredPane1.add(cboBlueType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -292,8 +292,7 @@ public class LudoFrame extends javax.swing.JFrame {
         txtRedName.setBounds(70, 340, 110, 20);
         jLayeredPane1.add(txtRedName, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        cboRedType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", " " }));
-        cboRedType.setSelectedIndex(1);
+        cboRedType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", "Move-Front", "Move-Back", " " }));
         cboRedType.setBounds(70, 360, 110, 20);
         jLayeredPane1.add(cboRedType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -306,7 +305,7 @@ public class LudoFrame extends javax.swing.JFrame {
         lblYellowType.setBounds(340, 150, 40, 14);
         jLayeredPane1.add(lblYellowType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        cboYellowType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", " " }));
+        cboYellowType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", "Move-Front", "Move-Back", " " }));
         cboYellowType.setBounds(390, 150, 110, 20);
         jLayeredPane1.add(cboYellowType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -319,7 +318,7 @@ public class LudoFrame extends javax.swing.JFrame {
         lblYellowName1.setBounds(340, 430, 40, 14);
         jLayeredPane1.add(lblYellowName1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        cboYellowType1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", " " }));
+        cboYellowType1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", "Move-Front", "Move-Back", " " }));
         cboYellowType1.setBounds(390, 450, 110, 20);
         jLayeredPane1.add(cboYellowType1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -370,7 +369,7 @@ public class LudoFrame extends javax.swing.JFrame {
     // For initializing my own components as netbeans locks the first function.
     private void initComponents2()
     {
-        gameboard = Application.gameBoard;
+        gameboard = Application.gameboard;
         gameboard.AddGameEventListener(new ActionListener() { public void actionPerformed(ActionEvent evt) { GameEventHandler(evt); } });
         
         diceTimer = new Timer();
@@ -465,7 +464,7 @@ public class LudoFrame extends javax.swing.JFrame {
         
         // Set player 4's interior 4 squares.
         for (int i = 0; i < 4; i++)
-            squares.add(new Point((int)(456 - i * SQUAREDIST), 238));
+            squares.add(new Point((int)(412 - i * SQUAREDIST), 238));
         
         // Set home squares.
         for (int i = 0; i < 16; i++)
@@ -479,7 +478,7 @@ public class LudoFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try
         {
-            Application.gameBoard.DoRollDicePhase();
+            Application.gameboard.DoRollDicePhase();
         }
         catch (GameException e)
         {
@@ -522,7 +521,7 @@ public class LudoFrame extends javax.swing.JFrame {
     private void GameEventHandler(ActionEvent evt)
     {
         System.out.println(evt.getActionCommand());
-        System.out.println(Application.gameBoard.GetPlayerPhase());
+        System.out.println(Application.gameboard.GetPlayerPhase());
         switch(evt.getActionCommand())
         {
             case "TURNSTART": TurnStartEventHandler(evt); break;
@@ -591,7 +590,7 @@ public class LudoFrame extends javax.swing.JFrame {
     
     private void PhaseEndEventHandler(ActionEvent evt)
     {
-        Board board = Application.gameBoard;
+        Board board = Application.gameboard;
         
         if (board.GetPlayerPhase() == Board.PHASE.ROLLDIE)
             gameboard.PauseGame(); // Wait for die animation to end.

@@ -4,11 +4,15 @@
  */
 package LudoApplication;
 
+import java.util.Random;
+
 /**
  *
  * @author Jason
  */
 public class RandomStrategy extends Strategy{
+    
+    private Random r = null;
     
     public RandomStrategy(Player owner)
     {
@@ -22,7 +26,9 @@ public class RandomStrategy extends Strategy{
     
     public Pawn ChoosePawn()
     {
-        // Not implemented.
-        return null;
+        Pawn[] pawns = gameboard.GetAvailablePawns(ownerId);
+        int p = r.nextInt(pawns.length);
+        
+        return pawns[p];
     }
 }

@@ -9,13 +9,13 @@ package LudoApplication;
  * @author Jason
  */
 public class Application {
-    public static Board gameBoard;
+    public static Board gameboard;
     public static LudoFrame boardView;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        gameBoard = new Board();
+        gameboard = new Board();
         boardView = new LudoFrame();
         
         boardView.setVisible(true);
