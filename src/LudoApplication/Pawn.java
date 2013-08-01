@@ -51,6 +51,9 @@ public class Pawn {
         if (isOn == value)
             return;
         
+        if (value == null)
+            ReturnHome();
+        
         Field old = isOn;
         isOn = value;
         

@@ -20,7 +20,12 @@ public class HumanStrategy extends Strategy{
         return "Human Strategy";
     }
     
-    public Pawn ChoosePawn()
+    public Board.PTYPE GetStrategyType()
+    {
+        return Board.PTYPE.HUMAN;
+    }
+    
+    public Pawn ChoosePawn(Pawn[] available, Pawn[][] all, int valueRolled)
     {
         return Application.gameboard.GetSelectedPawn();
     }

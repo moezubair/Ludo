@@ -19,6 +19,8 @@ public class Die {
     private int sides;
     private int faceValue;
     
+    public final boolean DEBUG = true;
+    
     public Die(int sides)
     {
         this.sides = sides;
@@ -31,6 +33,9 @@ public class Die {
             r = new Random();
         
         faceValue  = r.nextInt(sides) + 1;
+        
+        if (DEBUG)
+            faceValue = Math.min(r.nextInt(12) + 1, 6);
     }
     
     public int GetFaceValue()

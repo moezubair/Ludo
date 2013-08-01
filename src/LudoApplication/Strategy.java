@@ -22,5 +22,7 @@ public abstract class Strategy {
     
     public abstract String GetStrategyName();
     
-    public abstract Pawn ChoosePawn();
+    public abstract Board.PTYPE GetStrategyType();
+    
+    public abstract Pawn ChoosePawn(Pawn[] available, Pawn[][] all, int valueRolled);
 }

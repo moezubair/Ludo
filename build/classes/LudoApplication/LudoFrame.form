@@ -494,17 +494,17 @@
         <Component class="javax.swing.JComboBox" name="cboBlueType">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="8">
+              <StringArray count="7">
                 <StringItem index="0" value="None"/>
                 <StringItem index="1" value="Human"/>
-                <StringItem index="2" value="Random"/>
+                <StringItem index="2" value="Simple"/>
                 <StringItem index="3" value="Aggressive"/>
                 <StringItem index="4" value="Defensive"/>
                 <StringItem index="5" value="Move-Front"/>
                 <StringItem index="6" value="Move-Back"/>
-                <StringItem index="7" value=" "/>
               </StringArray>
             </Property>
+            <Property name="name" type="java.lang.String" value="pType2" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -515,6 +515,7 @@
         <Component class="javax.swing.JTextField" name="txtBlueName">
           <Properties>
             <Property name="text" type="java.lang.String" value="Player 2"/>
+            <Property name="name" type="java.lang.String" value="pName2" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -546,6 +547,7 @@
         <Component class="javax.swing.JTextField" name="txtRedName">
           <Properties>
             <Property name="text" type="java.lang.String" value="Player 1"/>
+            <Property name="name" type="java.lang.String" value="pName1" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -556,17 +558,17 @@
         <Component class="javax.swing.JComboBox" name="cboRedType">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="8">
+              <StringArray count="7">
                 <StringItem index="0" value="None"/>
                 <StringItem index="1" value="Human"/>
-                <StringItem index="2" value="Random"/>
+                <StringItem index="2" value="Simple"/>
                 <StringItem index="3" value="Aggressive"/>
                 <StringItem index="4" value="Defensive"/>
                 <StringItem index="5" value="Move-Front"/>
                 <StringItem index="6" value="Move-Back"/>
-                <StringItem index="7" value=" "/>
               </StringArray>
             </Property>
+            <Property name="name" type="java.lang.String" value="pType1" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -598,17 +600,17 @@
         <Component class="javax.swing.JComboBox" name="cboYellowType">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="8">
+              <StringArray count="7">
                 <StringItem index="0" value="None"/>
                 <StringItem index="1" value="Human"/>
-                <StringItem index="2" value="Random"/>
+                <StringItem index="2" value="Simple"/>
                 <StringItem index="3" value="Aggressive"/>
                 <StringItem index="4" value="Defensive"/>
                 <StringItem index="5" value="Move-Front"/>
                 <StringItem index="6" value="Move-Back"/>
-                <StringItem index="7" value=" "/>
               </StringArray>
             </Property>
+            <Property name="name" type="java.lang.String" value="pType3" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -619,6 +621,7 @@
         <Component class="javax.swing.JTextField" name="txtYellowName">
           <Properties>
             <Property name="text" type="java.lang.String" value="Player 3"/>
+            <Property name="name" type="java.lang.String" value="pName3" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -637,20 +640,20 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cboYellowType1">
+        <Component class="javax.swing.JComboBox" name="cboGreenType">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="8">
+              <StringArray count="7">
                 <StringItem index="0" value="None"/>
                 <StringItem index="1" value="Human"/>
-                <StringItem index="2" value="Random"/>
+                <StringItem index="2" value="Simple"/>
                 <StringItem index="3" value="Aggressive"/>
                 <StringItem index="4" value="Defensive"/>
                 <StringItem index="5" value="Move-Front"/>
                 <StringItem index="6" value="Move-Back"/>
-                <StringItem index="7" value=" "/>
               </StringArray>
             </Property>
+            <Property name="name" type="java.lang.String" value="pType4" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
@@ -658,9 +661,10 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtYellowName1">
+        <Component class="javax.swing.JTextField" name="txtGreenName">
           <Properties>
             <Property name="text" type="java.lang.String" value="Player 4"/>
+            <Property name="name" type="java.lang.String" value="pName4" noResource="true"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">

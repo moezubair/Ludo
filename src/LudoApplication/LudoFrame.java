@@ -26,6 +26,9 @@ public class LudoFrame extends javax.swing.JFrame {
     
     private ArrayList<JLabel> pawns = null;
     
+    private ArrayList<JTextField> nameFields = null;
+    private ArrayList<JComboBox> typeFields = null;
+    
     private Color[] colors = new Color[] { Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN };
     
     private Timer diceTimer = null;
@@ -33,6 +36,8 @@ public class LudoFrame extends javax.swing.JFrame {
     private boolean animateDie = false;
     private int dieAnimationTime = 0;
     private int dieRollCount = 0;
+    
+    private int logNum = 0;
     
     private Random random = null;
     
@@ -92,8 +97,8 @@ public class LudoFrame extends javax.swing.JFrame {
         cboYellowType = new javax.swing.JComboBox();
         txtYellowName = new javax.swing.JTextField();
         lblYellowName1 = new javax.swing.JLabel();
-        cboYellowType1 = new javax.swing.JComboBox();
-        txtYellowName1 = new javax.swing.JTextField();
+        cboGreenType = new javax.swing.JComboBox();
+        txtGreenName = new javax.swing.JTextField();
         lblYellowType1 = new javax.swing.JLabel();
         lblBoard = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -271,11 +276,13 @@ public class LudoFrame extends javax.swing.JFrame {
         lblBlueType.setBounds(20, 60, 40, 14);
         jLayeredPane1.add(lblBlueType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        cboBlueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", "Move-Front", "Move-Back", " " }));
+        cboBlueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Simple", "Aggressive", "Defensive", "Move-Front", "Move-Back" }));
+        cboBlueType.setName("pType2"); // NOI18N
         cboBlueType.setBounds(70, 60, 110, 20);
         jLayeredPane1.add(cboBlueType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         txtBlueName.setText("Player 2");
+        txtBlueName.setName("pName2"); // NOI18N
         txtBlueName.setBounds(70, 40, 110, 20);
         jLayeredPane1.add(txtBlueName, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -289,10 +296,12 @@ public class LudoFrame extends javax.swing.JFrame {
         jLayeredPane1.add(lblRedType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         txtRedName.setText("Player 1");
+        txtRedName.setName("pName1"); // NOI18N
         txtRedName.setBounds(70, 340, 110, 20);
         jLayeredPane1.add(txtRedName, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        cboRedType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", "Move-Front", "Move-Back", " " }));
+        cboRedType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Simple", "Aggressive", "Defensive", "Move-Front", "Move-Back" }));
+        cboRedType.setName("pType1"); // NOI18N
         cboRedType.setBounds(70, 360, 110, 20);
         jLayeredPane1.add(cboRedType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -305,11 +314,13 @@ public class LudoFrame extends javax.swing.JFrame {
         lblYellowType.setBounds(340, 150, 40, 14);
         jLayeredPane1.add(lblYellowType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        cboYellowType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", "Move-Front", "Move-Back", " " }));
+        cboYellowType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Simple", "Aggressive", "Defensive", "Move-Front", "Move-Back" }));
+        cboYellowType.setName("pType3"); // NOI18N
         cboYellowType.setBounds(390, 150, 110, 20);
         jLayeredPane1.add(cboYellowType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         txtYellowName.setText("Player 3");
+        txtYellowName.setName("pName3"); // NOI18N
         txtYellowName.setBounds(390, 130, 110, 20);
         jLayeredPane1.add(txtYellowName, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -318,13 +329,15 @@ public class LudoFrame extends javax.swing.JFrame {
         lblYellowName1.setBounds(340, 430, 40, 14);
         jLayeredPane1.add(lblYellowName1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        cboYellowType1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Random", "Aggressive", "Defensive", "Move-Front", "Move-Back", " " }));
-        cboYellowType1.setBounds(390, 450, 110, 20);
-        jLayeredPane1.add(cboYellowType1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        cboGreenType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Simple", "Aggressive", "Defensive", "Move-Front", "Move-Back" }));
+        cboGreenType.setName("pType4"); // NOI18N
+        cboGreenType.setBounds(390, 450, 110, 20);
+        jLayeredPane1.add(cboGreenType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        txtYellowName1.setText("Player 4");
-        txtYellowName1.setBounds(390, 430, 110, 20);
-        jLayeredPane1.add(txtYellowName1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        txtGreenName.setText("Player 4");
+        txtGreenName.setName("pName4"); // NOI18N
+        txtGreenName.setBounds(390, 430, 110, 20);
+        jLayeredPane1.add(txtGreenName, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblYellowType1.setText("Type:");
         lblYellowType1.setBounds(340, 450, 40, 14);
@@ -406,12 +419,38 @@ public class LudoFrame extends javax.swing.JFrame {
         pawns.add(lblGreenPawn4);
         
         
-        MouseAdapter pawnMouseAdapter = new MouseAdapter()  { public void mouseEntered(MouseEvent evt) { PawnMouseEntered(evt); }
+        MouseAdapter maPawn = new MouseAdapter()  { public void mouseEntered(MouseEvent evt) { PawnMouseEntered(evt); }
                                                               public void mouseExited(MouseEvent evt) { PawnMouseExited(evt); };
                                                               public void mousePressed(MouseEvent evt) { PawnMouseClicked(evt); }};
         
         for (JLabel lbl : pawns)
-            lbl.addMouseListener(pawnMouseAdapter);
+            lbl.addMouseListener(maPawn);
+        
+        nameFields = new ArrayList<JTextField>();
+        nameFields.add(txtRedName);
+        nameFields.add(txtBlueName);
+        nameFields.add(txtYellowName);
+        nameFields.add(txtGreenName);
+        
+        ActionListener alName = new ActionListener() { public void actionPerformed(ActionEvent evt) { PlayerNameChanged(evt); } };
+        FocusAdapter faName = new FocusAdapter() { public void focusLost(FocusEvent evt) { PlayerNameChanged(evt); } };
+        
+        for (JTextField txt : nameFields)
+        {
+            txt.addActionListener(alName);
+            txt.addFocusListener(faName);
+        }
+        
+        typeFields = new ArrayList<JComboBox>();
+        typeFields.add(cboRedType);
+        typeFields.add(cboBlueType);
+        typeFields.add(cboYellowType);
+        typeFields.add(cboGreenType);
+        
+        ItemListener ilType = new ItemListener() { public void itemStateChanged(ItemEvent evt) { PlayerTypeChanged(evt); } };
+        
+        for (JComboBox cbo : typeFields)
+            cbo.addItemListener(ilType);
     }
     
     private void initSquares()
@@ -472,6 +511,12 @@ public class LudoFrame extends javax.swing.JFrame {
     }       
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        if (gameboard.GetDie().DEBUG)
+        {
+            AddLogMessage("DEBUG die enabled.");
+            AddLogMessage("Chance for a 6 doubled.");
+        }
+        
         gameboard.StartGame();
     }//GEN-LAST:event_formWindowOpened
 
@@ -516,6 +561,23 @@ public class LudoFrame extends javax.swing.JFrame {
     {
         JLabel lblPawn = (JLabel)evt.getSource();
         lblPawn.setBorder(null);
+    }
+    
+    private void PlayerNameChanged(java.awt.AWTEvent evt)
+    {
+        JTextField src = (JTextField)evt.getSource();
+        int pIndex = nameFields.indexOf(src);
+        
+        gameboard.SetPlayerName(pIndex, src.getText());
+    }
+    
+    private void PlayerTypeChanged(java.awt.event.ItemEvent evt)
+    {
+        JComboBox src = (JComboBox)evt.getSource();
+        int pIndex = typeFields.indexOf(src);
+        int type = src.getSelectedIndex();
+        
+        gameboard.SetPlayerType(pIndex, Board.PTYPE.values()[type]);
     }
     
     private void GameEventHandler(ActionEvent evt)
@@ -692,16 +754,22 @@ public class LudoFrame extends javax.swing.JFrame {
         if (msg == "" || msg == null)
             return;
         
-        String num = String.valueOf(gameLog.size() % 100);
+        logNum++;
         
-        gameLog.insertElementAt("- " + num + ": " + msg, 0);
+        String line = String.format("- %02d: %s", logNum % 100, msg);
+        
+        
+        if (gameLog.size() >= 99)
+            gameLog.removeElementAt(gameLog.size() - 1);
+        
+        gameLog.insertElementAt(line, 0);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboBlueType;
+    private javax.swing.JComboBox cboGreenType;
     private javax.swing.JComboBox cboRedType;
     private javax.swing.JComboBox cboYellowType;
-    private javax.swing.JComboBox cboYellowType1;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -740,8 +808,8 @@ public class LudoFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblYellowType;
     private javax.swing.JLabel lblYellowType1;
     private javax.swing.JTextField txtBlueName;
+    private javax.swing.JTextField txtGreenName;
     private javax.swing.JTextField txtRedName;
     private javax.swing.JTextField txtYellowName;
-    private javax.swing.JTextField txtYellowName1;
     // End of variables declaration//GEN-END:variables
 }
