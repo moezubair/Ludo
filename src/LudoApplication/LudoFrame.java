@@ -53,11 +53,12 @@ public class LudoFrame extends javax.swing.JFrame {
     
     // Gamelog parameters.
     private int logNum = 0;
+    private DefaultListModel gameLog = null;
     
     // Dice animation randomizer.
     private Random random = null;
     
-    private DefaultListModel gameLog = null;
+    
     
     /**
      * Creates new form NewJFrame
@@ -849,7 +850,8 @@ public class LudoFrame extends javax.swing.JFrame {
         {
             float t = Math.min((float)pawnAnimationTime / 4, 1);
             
-            // No operator overloading in Java for the fail!
+            // Calculate the interpolation between the start and end
+            // positions for the pawn.
             Point disp = (Point)pawnAnimationEnd.clone();
             disp.translate(-pawnAnimationStart.x, -pawnAnimationStart.y);
             
@@ -858,6 +860,7 @@ public class LudoFrame extends javax.swing.JFrame {
             
             pawnAnimated.setLocation(interpolated);
             
+            // End animation and resume game after 30 frames.
             if (pawnAnimationTime >= 30)
             {
                 pawnAnimated = null;
