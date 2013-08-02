@@ -8,7 +8,7 @@ package LudoApplication;
  *
  * @author Jason
  */
-public class AggressiveStrategy extends SimpleStrategy{
+public class AggressiveStrategy extends SimpleCPUStrategy{
     public AggressiveStrategy(Player owner)
     {
         super(owner);
@@ -31,6 +31,7 @@ public class AggressiveStrategy extends SimpleStrategy{
     {
         Pawn result = null;
         
+        // Check for an opportunity to bump another pawn.
         for (Pawn p : available)
         {
             Field curSquare = p.GetSquare();
@@ -41,6 +42,7 @@ public class AggressiveStrategy extends SimpleStrategy{
                 result = p;
         }
         
+        // Revert to the simple CPU strategy if no opportunities are available.
         if (result == null)
             result = super.ChoosePawn(available, all, valueRolled);
         

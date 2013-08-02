@@ -16,12 +16,18 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="New Game"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Exit"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem2ActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -504,6 +510,7 @@
                 <StringItem index="6" value="Move-Back"/>
               </StringArray>
             </Property>
+            <Property name="selectedIndex" type="int" value="1"/>
             <Property name="name" type="java.lang.String" value="pType2" noResource="true"/>
           </Properties>
           <Constraints>
@@ -568,6 +575,7 @@
                 <StringItem index="6" value="Move-Back"/>
               </StringArray>
             </Property>
+            <Property name="selectedIndex" type="int" value="1"/>
             <Property name="name" type="java.lang.String" value="pType1" noResource="true"/>
           </Properties>
           <Constraints>
@@ -610,6 +618,7 @@
                 <StringItem index="6" value="Move-Back"/>
               </StringArray>
             </Property>
+            <Property name="selectedIndex" type="int" value="1"/>
             <Property name="name" type="java.lang.String" value="pType3" noResource="true"/>
           </Properties>
           <Constraints>
@@ -653,6 +662,7 @@
                 <StringItem index="6" value="Move-Back"/>
               </StringArray>
             </Property>
+            <Property name="selectedIndex" type="int" value="1"/>
             <Property name="name" type="java.lang.String" value="pType4" noResource="true"/>
           </Properties>
           <Constraints>

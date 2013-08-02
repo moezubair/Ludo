@@ -36,6 +36,7 @@ public class Junction extends Field{
         if (distance == 0)
             return this;
         
+        // Switch to goal junction if this junction belongs to the player.
         if (belongsTo == p && nextGoal != null)
             return nextGoal.GetNextForPlayer(p, distance - 1);
         

@@ -41,7 +41,6 @@ public class Board {
     
     private Timer gameTimer = null;
     private TimerTask gameTask = null;
-    private int gameUpdateInterval = 100;
     
     
     // Event listeners.
@@ -151,14 +150,13 @@ public class Board {
         die = new Die(6);
 
         // Setup the game update loop.
-        gameUpdateInterval = 100;
         gameTask = new TimerTask() {
             public void run() {
                 AdvanceGame();
             }
         };
         gameTimer = new Timer();
-        gameTimer.schedule(gameTask, 0, gameUpdateInterval);
+        gameTimer.schedule(gameTask, 0, Application.GAME_UPDATE_INTERVAL);
 
         this.gameEventListeners = new ArrayList<ActionListener>();
     }
@@ -167,6 +165,9 @@ public class Board {
         if (paused || (pausedForInput && actingPlayer.IsHumanPlayer())) {
             return;
         }
+        
+        if (actingPlayer == null || !actingPlayer.IsEnabled())
+            turnEnded = true;
 
         try {
             if (turnEnded) {
@@ -184,7 +185,16 @@ public class Board {
     }
 
     // Game Operations
-    public void StartGame() {
+    public void StartNewGame() {
+        
+        for (int i = 0; i < pawns.length; i++)
+            for (int j = 0; j < pawns[i].length; j++)
+                pawns[i][j].ReturnHome();
+        
+        paused = false;
+        pausedForInput = false;
+        
+        SetPlayerPhase(PHASE.NONE);
         SetPlayerTurn(0);
     }
 
@@ -201,12 +211,8 @@ public class Board {
 
         while (!players[next].IsEnabled() && next != playerTurn)
             next = (next + 1) % MAXPLAYERS;
-        
-        if (next == playerTurn)
-            return; // Can't advance turn.
 
         SetPlayerTurn(next);
-
     }
 
     public void EndTurn() {
@@ -216,22 +222,13 @@ public class Board {
     }
 
     public void AdvancePhase() {
-        switch (playerPhase) {
-            case NONE:
-                SetPlayerPhase(PHASE.STARTTURN);
-                break;
-            case STARTTURN:
-                SetPlayerPhase(PHASE.ROLLDIE);
-                break;
-            case ROLLDIE:
-                SetPlayerPhase(PHASE.MOVEPAWNS);
-                break;
-            case MOVEPAWNS:
-                SetPlayerPhase(PHASE.ENDTURN);
-                break;
-            case ENDTURN:
-                SetPlayerPhase(PHASE.NONE);
-                break;
+        switch (playerPhase) 
+        {
+            case NONE: SetPlayerPhase(PHASE.STARTTURN); break;
+            case STARTTURN: SetPlayerPhase(PHASE.ROLLDIE); break;
+            case ROLLDIE: SetPlayerPhase(PHASE.MOVEPAWNS); break;
+            case MOVEPAWNS: SetPlayerPhase(PHASE.ENDTURN); break;
+            case ENDTURN: SetPlayerPhase(PHASE.NONE); break;
         }
     }
 
@@ -242,19 +239,12 @@ public class Board {
     }
 
     public void DoPhase() throws GameException {
-        switch (playerPhase) {
-            case STARTTURN:
-                DoStartTurnPhase();
-                break;
-            case ROLLDIE:
-                DoRollDicePhase();
-                break;
-            case MOVEPAWNS:
-                DoMovePawnsPhase();
-                break;
-            case ENDTURN:
-                DoEndTurnPhase();
-                break;
+        switch (playerPhase)
+        {
+            case STARTTURN: DoStartTurnPhase(); break;
+            case ROLLDIE: DoRollDicePhase(); break;
+            case MOVEPAWNS: DoMovePawnsPhase(); break;
+            case ENDTURN: DoEndTurnPhase(); break;
         }
     }
 
@@ -477,6 +467,7 @@ public class Board {
         turnEnded = false;
         SetPlayerPhase(PHASE.STARTTURN);
 
+        if (actingPlayer != null && actingPlayer.IsEnabled())
         OnTurnStart();
     }
 
@@ -541,8 +532,9 @@ public class Board {
         
         switch(type)
         {
+            case NONE: strategy = null; break;
             case HUMAN: strategy = new HumanStrategy(player); break;
-            case SIMPLE: strategy = new SimpleStrategy(player); break;
+            case SIMPLE: strategy = new SimpleCPUStrategy(player); break;
             case AGGRESSIVE: strategy = new AggressiveStrategy(player); break;
             case DEFENSIVE: strategy = new DefensiveStrategy(player); break;
             case MOVE_FRONT: strategy = new MoveFrontStrategy(player); break;

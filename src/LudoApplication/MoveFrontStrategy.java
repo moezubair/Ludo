@@ -10,7 +10,7 @@ import java.util.Random;
  *
  * @author Jason
  */
-public class MoveFrontStrategy extends Strategy{
+public class MoveFrontStrategy extends SimpleCPUStrategy{
 
     public MoveFrontStrategy(Player owner)
     {

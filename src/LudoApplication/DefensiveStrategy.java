@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Jason
  */
-public class DefensiveStrategy extends SimpleStrategy{
+public class DefensiveStrategy extends SimpleCPUStrategy{
     public DefensiveStrategy(Player owner)
     {
         super(owner);
@@ -59,9 +59,11 @@ public class DefensiveStrategy extends SimpleStrategy{
                 {
                     Pawn occupant = square.GetOccupant();
                     
+                    // Check if this pawn threatens any of the owner's pawns.
                     if (occupant != null && occupant.GetPlayerId() == ownerId)
                         vBefore[occupant.GetPawnId()]++;
                 
+                    // Check if this pawn threatens any post-move squares.
                     for (int k = 0; k < next.length; k++)
                         if (next[k] == square)
                             vAfter[k]++;
@@ -72,9 +74,9 @@ public class DefensiveStrategy extends SimpleStrategy{
         }
         
             
-        // Determine the pawn with the largest vulnerability difference
+        // Determine the pawns with the largest vulnerability difference
         // before and after moving.
-        int mvDif = -99;
+        int mvDif = -99; // Arbitrarily low number to be below all differences.
         ArrayList<Pawn> result = new ArrayList<Pawn>();
         for (Pawn p : available)
         {
@@ -90,6 +92,7 @@ public class DefensiveStrategy extends SimpleStrategy{
                 result.add(p);
         }
         
+        // Choose which pawn to move from the endangered pawns.
         return super.ChoosePawn(result.toArray(new Pawn[0]), all, valueRolled);
     }
 }

@@ -19,8 +19,6 @@ public class Die {
     private int sides;
     private int faceValue;
     
-    public final boolean DEBUG = true;
-    
     public Die(int sides)
     {
         this.sides = sides;
@@ -34,8 +32,10 @@ public class Die {
         
         faceValue  = r.nextInt(sides) + 1;
         
-        if (DEBUG)
+        // DEBUG ==============================================================
+        if (Application.SPEED_DIE)
             faceValue = Math.min(r.nextInt(12) + 1, 6);
+        // DEBUG ==============================================================
     }
     
     public int GetFaceValue()

@@ -10,11 +10,11 @@ import java.util.Random;
  *
  * @author Jason
  */
-public class SimpleStrategy extends Strategy{
+public class SimpleCPUStrategy extends Strategy{
     
     private Random r = null;
     
-    public SimpleStrategy(Player owner)
+    public SimpleCPUStrategy(Player owner)
     {
         super(owner);
         

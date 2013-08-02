@@ -11,6 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  *
@@ -20,8 +21,10 @@ public class LudoFrame extends javax.swing.JFrame {
     
     private final int SQUAREDIST = 44;
     
+    // Backend gameboard object.
     private Board gameboard = null;
     
+    // Visual elements.
     private ArrayList<Point> squares = null;
     
     private ArrayList<JLabel> pawns = null;
@@ -31,14 +34,27 @@ public class LudoFrame extends javax.swing.JFrame {
     
     private Color[] colors = new Color[] { Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN };
     
+    
+    // Dice animation parameters
     private Timer diceTimer = null;
     private TimerTask diceUpdateTask = null;
     private boolean animateDie = false;
     private int dieAnimationTime = 0;
     private int dieRollCount = 0;
     
+    // Pawn animation parameters.
+    private Timer pawnTimer = null;
+    private TimerTask pawnUpdateTask = null;
+    private int pawnAnimationTime = 0;
+    private Point pawnAnimationStart = null;
+    private Point pawnAnimationEnd = null;
+    private Stack<PawnAnimationData> pawnAnimationQueue = null;
+    private JLabel pawnAnimated = null;
+    
+    // Gamelog parameters.
     private int logNum = 0;
     
+    // Dice animation randomizer.
     private Random random = null;
     
     private DefaultListModel gameLog = null;
@@ -277,6 +293,7 @@ public class LudoFrame extends javax.swing.JFrame {
         jLayeredPane1.add(lblBlueType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         cboBlueType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Simple", "Aggressive", "Defensive", "Move-Front", "Move-Back" }));
+        cboBlueType.setSelectedIndex(1);
         cboBlueType.setName("pType2"); // NOI18N
         cboBlueType.setBounds(70, 60, 110, 20);
         jLayeredPane1.add(cboBlueType, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -301,6 +318,7 @@ public class LudoFrame extends javax.swing.JFrame {
         jLayeredPane1.add(txtRedName, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         cboRedType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Simple", "Aggressive", "Defensive", "Move-Front", "Move-Back" }));
+        cboRedType.setSelectedIndex(1);
         cboRedType.setName("pType1"); // NOI18N
         cboRedType.setBounds(70, 360, 110, 20);
         jLayeredPane1.add(cboRedType, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -315,6 +333,7 @@ public class LudoFrame extends javax.swing.JFrame {
         jLayeredPane1.add(lblYellowType, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         cboYellowType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Simple", "Aggressive", "Defensive", "Move-Front", "Move-Back" }));
+        cboYellowType.setSelectedIndex(1);
         cboYellowType.setName("pType3"); // NOI18N
         cboYellowType.setBounds(390, 150, 110, 20);
         jLayeredPane1.add(cboYellowType, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -330,6 +349,7 @@ public class LudoFrame extends javax.swing.JFrame {
         jLayeredPane1.add(lblYellowName1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         cboGreenType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Human", "Simple", "Aggressive", "Defensive", "Move-Front", "Move-Back" }));
+        cboGreenType.setSelectedIndex(1);
         cboGreenType.setName("pType4"); // NOI18N
         cboGreenType.setBounds(390, 450, 110, 20);
         jLayeredPane1.add(cboGreenType, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -351,10 +371,20 @@ public class LudoFrame extends javax.swing.JFrame {
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setText("New Game");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setText("Exit");
         jMenuItem2.setToolTipText("");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
         jMenuBar1.add(jMenu1);
@@ -389,13 +419,48 @@ public class LudoFrame extends javax.swing.JFrame {
         diceUpdateTask = new TimerTask() { public void run() { AnimateDie(); } };
         diceTimer.schedule(diceUpdateTask, 0, 10);
         
+        pawnTimer = new Timer();
+        pawnUpdateTask = new TimerTask() { public void run() { AnimatePawns(); } };
+        pawnTimer.schedule(pawnUpdateTask, 0, 5);
+        pawnAnimationQueue = new Stack<PawnAnimationData>();
+        
         random = new Random();
         
         gameLog = new DefaultListModel();
         jList1.setModel(gameLog);
         
+        initInputFields();
         initPawns();
         initSquares();
+    }
+    
+    private void initInputFields()
+    {
+        nameFields = new ArrayList<JTextField>();
+        nameFields.add(txtRedName);
+        nameFields.add(txtBlueName);
+        nameFields.add(txtYellowName);
+        nameFields.add(txtGreenName);
+        
+        ActionListener alName = new ActionListener() { public void actionPerformed(ActionEvent evt) { PlayerNameChanged(evt); } };
+        FocusAdapter faName = new FocusAdapter() { public void focusLost(FocusEvent evt) { PlayerNameChanged(evt); } };
+        
+        for (JTextField txt : nameFields)
+        {
+            txt.addActionListener(alName);
+            txt.addFocusListener(faName);
+        }
+        
+        typeFields = new ArrayList<JComboBox>();
+        typeFields.add(cboRedType);
+        typeFields.add(cboBlueType);
+        typeFields.add(cboYellowType);
+        typeFields.add(cboGreenType);
+        
+        ItemListener ilType = new ItemListener() { public void itemStateChanged(ItemEvent evt) { PlayerTypeChanged(evt); } };
+        
+        for (JComboBox cbo : typeFields)
+            cbo.addItemListener(ilType);
     }
     
     private void initPawns()
@@ -425,32 +490,6 @@ public class LudoFrame extends javax.swing.JFrame {
         
         for (JLabel lbl : pawns)
             lbl.addMouseListener(maPawn);
-        
-        nameFields = new ArrayList<JTextField>();
-        nameFields.add(txtRedName);
-        nameFields.add(txtBlueName);
-        nameFields.add(txtYellowName);
-        nameFields.add(txtGreenName);
-        
-        ActionListener alName = new ActionListener() { public void actionPerformed(ActionEvent evt) { PlayerNameChanged(evt); } };
-        FocusAdapter faName = new FocusAdapter() { public void focusLost(FocusEvent evt) { PlayerNameChanged(evt); } };
-        
-        for (JTextField txt : nameFields)
-        {
-            txt.addActionListener(alName);
-            txt.addFocusListener(faName);
-        }
-        
-        typeFields = new ArrayList<JComboBox>();
-        typeFields.add(cboRedType);
-        typeFields.add(cboBlueType);
-        typeFields.add(cboYellowType);
-        typeFields.add(cboGreenType);
-        
-        ItemListener ilType = new ItemListener() { public void itemStateChanged(ItemEvent evt) { PlayerTypeChanged(evt); } };
-        
-        for (JComboBox cbo : typeFields)
-            cbo.addItemListener(ilType);
     }
     
     private void initSquares()
@@ -510,14 +549,21 @@ public class LudoFrame extends javax.swing.JFrame {
             squares.add(pawns.get(i).getLocation());
     }       
     
+    // ########################################################################
+    // -----------------------Interface Events---------------------------------
+    // ########################################################################
+    
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        if (gameboard.GetDie().DEBUG)
+        // DEBUG ==============================================================
+        if (Application.SPEED_DIE)
         {
             AddLogMessage("DEBUG die enabled.");
             AddLogMessage("Chance for a 6 doubled.");
         }
+        // DEBUG ==============================================================
         
-        gameboard.StartGame();
+        gameboard.StartNewGame();
+        AddLogMessage("New game started.");
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -530,6 +576,21 @@ public class LudoFrame extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        gameboard.StartNewGame();
+        
+        logNum = 0;
+        gameLog.clear();
+        AddLogMessage("New game started.");
+        
+        for (int i = 0; i < pawns.size(); i++)
+            pawns.get(i).setLocation(squares.get(56 + i));
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
         
     private void PawnMouseEntered(java.awt.event.MouseEvent evt)
     {
@@ -553,7 +614,16 @@ public class LudoFrame extends javax.swing.JFrame {
         }
         catch (GameException e)
         {
-            
+            switch(e.getType())
+            {
+                case UNKNOWN: AddLogMessage("Unknown Error."); break;
+                case PHASE: AddLogMessage("Pawns can't be moved now"); break;
+                case PAWN_NOT_OWNED: AddLogMessage("This is not your pawn."); break;
+                case PAWN_BLOCKED: AddLogMessage("This pawn is blocked."); break;
+                case PAWN_AT_HOME: AddLogMessage("A Six needs to be rolled to move this pawn."); break;
+                case EXCEEDS_GOAL: AddLogMessage("Pawn cannot exceed the end of the goal area."); break;
+                default: AddLogMessage("Unknown Error."); break;
+            }
         }
     }
     
@@ -580,10 +650,20 @@ public class LudoFrame extends javax.swing.JFrame {
         gameboard.SetPlayerType(pIndex, Board.PTYPE.values()[type]);
     }
     
+    // ########################################################################
+    // ----------------------------Game Events---------------------------------
+    // ########################################################################
+    
     private void GameEventHandler(ActionEvent evt)
     {
+        // This is a bit lazy as all game events are handled by a single
+        // master event handler... 
+        
+        /*
         System.out.println(evt.getActionCommand());
         System.out.println(Application.gameboard.GetPlayerPhase());
+        */
+        
         switch(evt.getActionCommand())
         {
             case "TURNSTART": TurnStartEventHandler(evt); break;
@@ -652,10 +732,7 @@ public class LudoFrame extends javax.swing.JFrame {
     
     private void PhaseEndEventHandler(ActionEvent evt)
     {
-        Board board = Application.gameboard;
         
-        if (board.GetPlayerPhase() == Board.PHASE.ROLLDIE)
-            gameboard.PauseGame(); // Wait for die animation to end.
     }
     
     private void DieRolledEventHandler(ActionEvent evt)
@@ -664,7 +741,19 @@ public class LudoFrame extends javax.swing.JFrame {
         AddLogMessage(msg);
         
         jButton1.setEnabled(false);
-        PlayDiceAnimation();
+        
+        // DEBUG ==============================================================
+        if (Application.DISABLE_DIE_ANIMATION)
+        {
+            OnDieAnimationEnd();
+        }
+        else
+        {
+        // DEBUG ==============================================================
+            gameboard.PauseGame();
+            PlayDiceAnimation();
+        }
+        
     }
     
     private void PawnMovedEventHandler(ActionEvent evt)
@@ -676,27 +765,25 @@ public class LudoFrame extends javax.swing.JFrame {
         
         int playerId = pawn.GetPlayerId();
         int pawnId = pawn.GetPawnId();
+        int squareId = square.GetId();
         
         JLabel lblPawn = pawns.get(playerId * 4 + pawnId);
         lblPawn.setBorder(null);
         
-        if (square != null)
+        // DEBUG ==============================================================
+        if (Application.DISABLE_PAWN_ANIMATION)
             lblPawn.setLocation(squares.get(square.GetId()));
         else
-            lblPawn.setVisible(false);
-        
-        jLabel1.setText(String.valueOf(gameboard.GetRemainingMoves()));
+        // DEBUG ==============================================================
+            QueuePawnAnimation(lblPawn, squares.get(squareId));
     }
     
     private void InvalidMoveEventHandler(ActionEvent evt)
     {
-        BoardEvent bevt = (BoardEvent)evt;
-        Object[] tags = (Object[])bevt.getTags();
-        String msg = (String)tags[0];
-        AddLogMessage(msg);
+        
     }
     
-    private void OnDiceAnimationEnd()
+    private void OnDieAnimationEnd()
     {
         int dieValue = gameboard.GetDie().GetFaceValue();
         String msg = gameboard.GetActingPlayer().GetName();
@@ -740,13 +827,67 @@ public class LudoFrame extends javax.swing.JFrame {
             dieRollCount++;
             
             if (dieRollCount >= 35)
+            //if (dieRollCount >= 0)
             {
                 animateDie = false;
-                OnDiceAnimationEnd();
+                OnDieAnimationEnd();
             }
         }
         
         dieAnimationTime++;
+    }
+    
+    private void QueuePawnAnimation(JLabel pawn, Point endPoint)
+    {
+        PawnAnimationData data = new PawnAnimationData(pawn, endPoint);
+        pawnAnimationQueue.add(data);        
+    }
+    
+    private void AnimatePawns()
+    {
+        if (pawnAnimated != null)
+        {
+            float t = Math.min((float)pawnAnimationTime / 4, 1);
+            
+            // No operator overloading in Java for the fail!
+            Point disp = (Point)pawnAnimationEnd.clone();
+            disp.translate(-pawnAnimationStart.x, -pawnAnimationStart.y);
+            
+            Point interpolated = (Point)pawnAnimationStart.clone();
+            interpolated.translate((int)(disp.x * t), (int)(disp.y * t));
+            
+            pawnAnimated.setLocation(interpolated);
+            
+            if (pawnAnimationTime >= 30)
+            {
+                pawnAnimated = null;
+                gameboard.UnpauseGame();
+            }
+        }
+        
+        // Continue through the Queue until all pawns have been animated.
+        try
+        {
+            if (pawnAnimated == null
+             && !pawnAnimationQueue.isEmpty())
+            {
+                PawnAnimationData data = pawnAnimationQueue.pop();
+                pawnAnimated = data.pawn;
+                pawnAnimationTime = 0;
+                pawnAnimationStart = pawnAnimated.getLocation();
+                pawnAnimationEnd = data.endPoint;
+                
+                jLayeredPane1.setComponentZOrder(pawnAnimated, 0);
+                
+                gameboard.PauseGame();
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+        
+        pawnAnimationTime++;
     }
     
     private void AddLogMessage(String msg)

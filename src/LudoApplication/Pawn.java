@@ -51,9 +51,11 @@ public class Pawn {
         if (isOn == value)
             return;
         
+        // Pawn must be associated with a square.
         if (value == null)
             ReturnHome();
         
+        // Maintaining referential integrity
         Field old = isOn;
         isOn = value;
         
